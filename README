@@ -8,5 +8,5 @@ See also:
 Running "./update" will push everything here to your $HOME. It will back up your
 existing crap in a tarball.
 
-Running "./downdate" will copy your current files back into this directory so you
-may commit them back to the git repository.
+Running "./downdate" will copy your current files back into this directory so
+you may commit them back to the git repository.

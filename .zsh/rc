@@ -1,0 +1,241 @@
+# vim: filetype=zsh
+# Florian Wallners zshrc
+
+function debug () {
+	if [[ -n $DEBUG ]] then
+			echo "DEBUG: $*"
+	fi
+}
+
+if [ -f $HOME/.zsh/debug ]; then
+	DEBUG="true"
+fi
+
+debug "Debug mode requested."
+debug "To disable remove the file .zsh/debug."
+
+if [ `id -u` -eq 0 ]; then
+	debug "We are running as root."
+	ROOT='true'
+fi
+
+# Make sure we've got ack in the path!
+if [ -d ${HOME}/bin ]; then
+    debug "Prepending bin to PATH"
+    PATH=${HOME}/bin:$PATH
+fi
+
+if [ -n $ROOT ]; then
+    # I want my umask tight and tidy
+    debug "setting umask to 027"
+    umask 027
+fi
+# the last 4096 commands entered are kept in the HISTORY and written  
+# to  "$HOME/.zsh/history" after loggout.
+
+export HISTSIZE=4096	
+export SAVEHIST=4096
+export HISTFILE=$HOME/.zsh/history
+
+# try to get the right Terminal-Type 
+
+# Informs us about who loggs in or out on our system. If the file
+# '~/.zsh/users' exists only the activity of the users in there 
+# is monitored, all users otherwise.
+ 
+if [ -f $HOME/.zsh/users ]; then
+   watch=( $(<$HOME/.zsh/users) )
+   debug "Watching only the people in $HOME/.zsh/users"
+else
+   watch=(notme)
+   debug "Watching all users but me."
+fi
+
+export LOGCHECK=60 # check all sixty seconds for login/logout activity
+export WATCHFMT="%n %a on %l from %M at %T"
+
+if [ -f $HOME/.zsh/hosts ]; then
+   hostnames=( $(<$HOME/.zsh/hosts) )
+fi
+
+# The options. Here are only those listed that are changed from the defaults.
+
+# Changing Directories
+
+setopt ALWAYS_TO_END       # Move to end of word after completion
+setopt AUTO_CD             # If an unknown command is a directory cd into it.
+setopt BRACE_CCL           # Expand expressions in braces
+setopt COMPLETE_IN_WORD    # Don't move to end of word when completeing.
+setopt CORRECT             # Try auto correction of commands
+setopt HIST_FCNTL_LOCK     # Use systems fcntl() to aquire a lock
+setopt HIST_IGNORE_ALLDUPS # Remove all duplicates from the history
+setopt HIST_NOSTORE        # Don't store history in the history
+setopt HIST_REDUCE_BLANKS  # Remove all superflous blanks from history entries
+setopt LONG_LIST_JOBS      # Display jobs in long list formats
+setopt MARK_DIRS           # Mark a generated filename as directory '/'
+setopt NUMERIC_GLOBSORT    # Sort generated numerical file names numerical
+setopt PUSHD_TO_HOME       # empty pushd pushes '~' onto stack
+
+
+# trying to setup the editor correctly
+
+if [[ -x /usr/bin/vim || -x /usr/local/bin/vim ]] then
+	debug "Found VIm, setting \$EDITOR to it."
+	export EDITOR=vim
+else 
+    # I catch myself very often typing 'vim' 'though I know its not 
+    # there... So I help myself :-)
+    
+	export EDITOR=vi
+	debug "Setting \$EDITOR to $EDITOR and setting up vim alias."
+	alias vim='vi'
+fi
+
+# Some environment variables:
+# the following are available under Linux.
+# export USER=`id -un`
+# export LOGNAME=$USER
+# export HOSTNAME=`/bin/hostname`
+
+# The prompt. Make sure colors are loaded
+
+autoload -U colors && colors
+RPROMPT="%~"               # display cwd at right side
+PROMPT="%{$fg[yellow]%}%T%{$reset_color%} %n@%m%# " # "Time name@hostname% "
+
+export PAGER=less	       # just in case we are on solaris
+export LESS="-cdeFiMRs -P?fFile %f:stdin. ?m(%i of %m) :.line %l ?Lof %L:.?p (%p\%):."
+export LESSCHARSET=utf-8   # Damit less Umlaute als solche anzeigt
+# Format man pages for a wigth of 80 col no matter how wide the terminal
+export MANWIDTH=80
+
+# Don't ignore leading dots when sorting.
+export LC_COLLATE="C"
+			
+# Set up aliases
+alias mv='nocorrect mv'    # no spelling correction on mv
+alias cp='nocorrect cp'    # no spelling correction on cp
+alias mkdir='nocorrect mkdir' # no spelling correction on mkdir
+
+# Buntes ls
+
+if [ "$TERM" != "dumb" ]; then 
+    eval "`dircolors -b`"
+    alias ls='ls --color=auto'
+fi
+
+alias ll='ls -l'
+alias la='ls -a' 
+alias cd..="cd .."
+alias \#='sudo'
+alias xps='ps aucx | head -1; ps aucx | grep -i '
+
+# Generate some aliases for programs that are not in the
+# usual path, unless for root that is.
+
+if [[ -x /usr/sbin/traceroute && -z "$ROOT" ]] then
+	alias traceroute='/usr/sbin/traceroute'
+	debug "Setting up traceroute alias."
+fi
+
+if [[ -x /sbin/fuser && -z $ROOT ]] then
+	alias fuser='/sbin/fuser'
+	debug "Setting up fuser alias."
+fi
+
+if [[ -x /sbin/ifup && -z $ROOT ]] then
+	alias ifup='/sbin/ifup'
+	debug "Setting up ifup alias."
+fi
+
+# Completition control
+autoload -U compinit
+compinit 
+
+# Completion caching
+zstyle ':completion::complete:*' use-cache 1
+zstyle ':completion::complete:*' cache-path $HOME/.zsh/cache/$HOST
+
+# formatting and messages
+zstyle ':completion:*' verbose yes
+zstyle ':completion:*:descriptions' format '%B%d%b'
+zstyle ':completion:*:messages' format '%d'
+zstyle ':completion:*:warnings' format 'No matches for: %d'
+zstyle ':completion:*:corrections' format '%B%d (errors: %e)%b'
+zstyle ':completion:*' group-name ''
+
+# match uppercase from lowercase
+zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
+
+# offer indexes before parameters in subscripts
+zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
+
+zstyle ':completion:*:hosts' hosts $hostnames
+
+if [ -f $HOME/.zsh/accounts ]; then
+	accounts=( $(<$HOME/.zsh/accounts) )
+	zstyle ':completion:*:complete:ssh:*' users $accounts
+	zstyle ':completion:*:complete:scp:*' users $accounts
+fi
+
+# Don't complete backup files as executables
+zstyle ':completion:*:complete:-command-::commands' ignored-patterns '*\~'
+
+# Separate matches into groups
+zstyle ':completion:*:matches' group 'yes'
+
+# Describe options in full
+zstyle ':completion:*:options' description 'yes'
+zstyle ':completion:*:options' auto-description '%d'
+
+# Magic with Window-Titles
+ 
+case $TERM in
+	xterm*|dtterm)
+		precmd ()  {print -Pn "\e]0;%n@%m: %~\a"} 
+        preexec () {print -Pn "\e]0;%n@%m: [$1]\a"} 
+	;;
+    screen)
+        precmd()  {print -Pn "\ek %n@%m: %~\e\\"}
+        preexec() {print -Pn "\ek %n@%m: [$1]\e\\"}
+	;;
+esac                  
+
+bindkey -e                  # emacs key bindings
+bindkey ' ' magic-space     # also do history expansion on space 
+bindkey "\e[3~" delete-char # make delete work correctly
+
+
+# Oh dear! We're done.
+
+
+if [ -x /usr/games/fortune ]; then
+	# One last thing ;-)
+    /usr/games/fortune
+elif [ -x /sw/bin/fortune ]; then
+    /sw/bin/fortune
+elif [ -x /opt/local/bin/fortune ]; then
+    /opt/local/bin/fortune
+fi
+
+SOURCE_FILES=(
+    $HOME/.agentrc
+    $HOME/.zsh/rc_$(hostname -f)
+    $HOME/.zsh/rc_$(dnsdomainname)
+    $HOME/.zsh/rc_local
+)
+
+for file in ${SOURCE_FILES[@]}; do
+    debug "Checking for file: $file"
+    if [ -f $file ]; then
+        debug "Sourcing $file"
+        source $file
+    fi
+done
+
+debug "Resetting all temporary variables."
+
+DEBUG=""
+system=""
+ROOT=""
+unfunction debug

@@ -1,0 +1,81 @@
+vm rc
+vim history
+rm history* hosts~ rc~
+env
+/HOST
+env | less
+man zshcompsys
+screen -r
+id
+umask
+touch bla
+ll
+rm bla
+cd ~depot
+cd =depot
+cat history
+cd ..
+ls mailfolders
+less mailfolders
+rm mailfolders
+vim accounts
+ös
+rm accounts~
+rm rc
+setopt
+man zshopts
+ls -l
+ls Audiobooks
+man ls
+ls -l | less
+man zsh
+man zshoptions
+echo $PATH
+evolution --force-shutdown
+echo $TERM
+man less
+touch .zsh/debug
+man man
+man whipe
+man wipe
+man shred
+cd .zsh
+scp palstek.duplox.org:~/.zsh/rc .
+vim rc
+pwd
+cd .zsh/
+rm rc\~
+sync
+rm debug
+ls cache
+vim .zsh/rc
+ssh palstek.duplox.org
+man ssh-agent
+cat .netrc
+vim .netrc
+vim .gitconfig
+git clone https://svn.duplox.org/git/balumba.org/ocd .ocd
+cd .ocd
+ls
+la
+su -
+# su -
+# touch bla
+ll bla
+sudo umask
+umask
+touch bla
+touch blub
+ll blub
+ll
+sudo echo $USER
+sudo echo $SUDO_USER
+ssh palstek.duplox.org
+cd .zsh
+ls
+rm rc_resolution
+rm rc_resolution\~
+ls
+vim rc
+cd ..
+screen
