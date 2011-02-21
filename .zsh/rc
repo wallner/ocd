@@ -120,7 +120,7 @@ alias mkdir='nocorrect mkdir' # no spelling correction on mkdir
 # Buntes ls
 
 if [ "$TERM" != "dumb" ]; then 
-    eval "`dircolors -b`"
+#    eval "`dircolors -b`" not needed
     alias ls='ls --color=auto'
 fi
 
@@ -219,7 +219,6 @@ elif [ -x /opt/local/bin/fortune ]; then
 fi
 
 SOURCE_FILES=(
-    $HOME/.agentrc
     $HOME/.zsh/rc_$(hostname -f)
     $HOME/.zsh/rc_$(dnsdomainname)
     $HOME/.zsh/rc_local
