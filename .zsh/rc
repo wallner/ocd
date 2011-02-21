@@ -67,8 +67,6 @@ setopt AUTO_CD             # If an unknown command is a directory cd into it.
 setopt BRACE_CCL           # Expand expressions in braces
 setopt COMPLETE_IN_WORD    # Don't move to end of word when completeing.
 setopt CORRECT             # Try auto correction of commands
-                           # the following is not available on all systems
-setopt NO_HIST_FCNTL_LOCK  # Use systems fcntl() to aquire a lock 
 setopt HIST_IGNORE_ALLDUPS # Remove all duplicates from the history
 setopt HIST_NOSTORE        # Don't store history in the history
 setopt HIST_REDUCE_BLANKS  # Remove all superflous blanks from history entries
