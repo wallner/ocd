@@ -1,5 +1,6 @@
 [user]
 	name = Florian Wallner
+    email = wallner@balumba.org
 
 [alias]
     co = checkout
