@@ -110,7 +110,7 @@ export MANWIDTH=80
 
 # Don't ignore leading dots when sorting.
 export LC_COLLATE="C"
-export LANG=en_EN.UTF-8
+export LANG=en_GB.UTF-8
 			
 # Set up aliases
 alias mv='nocorrect mv'    # no spelling correction on mv
