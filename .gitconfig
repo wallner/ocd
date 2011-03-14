@@ -15,4 +15,4 @@
 [core]
     autocrlf = input
     safecrlf = true
-	excludesfile = OCD_USER_HOME/.gitexcludes
+	excludesfile = ~/.gitexcludes

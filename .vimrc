@@ -31,14 +31,22 @@ set softtabstop=4		 " make sure all tabs are 4 spaces
 set expandtab            " Expand tabs to spaces
 set smarttab             " Backspace at the beginning of Line removes indention
 
+
+
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if &t_Co > 2 || has("gui_running")
 	syntax on
 	let highlight_balanced_quotes = 1
 	let highlight_function_name = 2
-	set background=light
 	set hlsearch         " highlight search
+endif
+
+if has('gui_running')
+	set background=light
+else
+    " friendly color scheme
+    colorscheme ron
 endif
 
 " Window management
@@ -149,8 +157,6 @@ set grepprg=grep\ -nH\ $*
 " Prevents Vim 7.0 from setting filetype to 'plaintex'
 let g:tex_flavor='latex'
 
-" friendly color scheme
-colorscheme elflord
 
 if filereadable(expand("~/.vimrc-local"))
       source ~/.vimrc-local
