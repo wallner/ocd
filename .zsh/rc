@@ -2,7 +2,7 @@
 # Florian Wallners zshrc
 
 function debug () {
-	if [[ -n $DEBUG ]] then
+	if [ -n $DEBUG ]; then
 			echo "DEBUG: $*"
 	fi
 }
@@ -25,10 +25,13 @@ if [ -d ${HOME}/bin ]; then
     PATH=${HOME}/bin:$PATH
 fi
 
-if [ -n $ROOT ]; then
+if [ -z $ROOT ]; then
     # I want my umask tight and tidy
     debug "setting umask to 027"
     umask 027
+else
+    debug "setting umask to 022"
+    umask 022
 fi
 # the last 4096 commands entered are kept in the HISTORY and written  
 # to  "$HOME/.zsh/history" after loggout.
