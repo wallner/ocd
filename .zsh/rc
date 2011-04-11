@@ -25,14 +25,19 @@ if [ -d ${HOME}/bin ]; then
     PATH=${HOME}/bin:$PATH
 fi
 
-if [ -z $ROOT ]; then
-    # I want my umask tight and tidy
-    debug "setting umask to 027"
-    umask 027
-else
-    debug "setting umask to 022"
-    umask 022
-fi
+# Disabled for the time being. Per default sudo doesn't permit for the users
+# umask to be more restrictive than the umask applied with super user
+# priveleges. You can fix it in '/etc/sudoers' but I am not sure wether I want
+# to dothat on all systems.
+# 
+# if [ -z $ROOT ]; then
+#  I want my umask tight and tidy
+#    debug "setting umask to 027"
+#    umask 027
+# else
+#    debug "setting umask to 022"
+#    umask 022
+# fi
 # the last 4096 commands entered are kept in the HISTORY and written  
 # to  "$HOME/.zsh/history" after loggout.
 
