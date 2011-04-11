@@ -1,10 +1,12 @@
 #!/bin/sh
 
-IGNORE_RE="(update|downdate|README|\.git/|\.sedfix$)"
+IGNORE_RE="(update|downdate|README|\.git/$)"
 FILES=$(find . -type f | egrep -v  "$IGNORE_RE")
 
+cd $HOME/.ocd
+
 for file in $FILES;do
-  echo -n .
+  printf .
   dst="$file"
   src="$HOME/$file"
   if [ -f $src ];then
