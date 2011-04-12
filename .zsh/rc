@@ -25,6 +25,11 @@ if [ -d ${HOME}/bin ]; then
     PATH=${HOME}/bin:$PATH
 fi
 
+# Do we have perlbrew?
+if [[ -d /usr/local/depot/perlbrew ]]; then
+    source /usr/local/depot/perlbrew/etc/bashrc
+fi
+
 # Disabled for the time being. Per default sudo doesn't permit for the users
 # umask to be more restrictive than the umask applied with super user
 # priveleges. You can fix it in '/etc/sudoers' but I am not sure wether I want
