@@ -1,5 +1,4 @@
 set nocompatible          " Use Vim defaults
-set autowrite			  " save before :make :suspend, etc 
 set backup            	  " keep a backup file
 set backspace=2           " allow backspacing over everything in insert mode
 set ruler				  " show cursorposition
@@ -12,8 +11,9 @@ set viminfo='20,\"50,h	  " read/write a .viminfo file, don't store more
                           " than 50 lines of registers
 set title				  " Set Terminals Title.
 set nostartofline         " Don't jump cursor around. Stay in one column
-set vb t_vb=              "  Turn the bell off. 
-let mapleader = ","     " My custom mappings are introduced by ',' 
+set vb t_vb=              " Turn the bell off. 
+let mapleader = ","       " My custom mappings are introduced by ',' 
+set autowrite			  " save before :make :suspend, etc 
 
 " Searching
 set incsearch			  " Incremental search. Search while typing.
@@ -31,12 +31,10 @@ set softtabstop=4		 " make sure all tabs are 4 spaces
 set expandtab            " Expand tabs to spaces
 set smarttab             " Backspace at the beginning of Line removes indention
 
-
-
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if &t_Co > 2 || has("gui_running")
-	syntax on
+	syntax enable
 	let highlight_balanced_quotes = 1
 	let highlight_function_name = 2
 	set hlsearch         " highlight search
@@ -69,9 +67,6 @@ set linebreak "Wrap at word
 
 " Use utf-8 as default encoding. 
 set encoding=utf-8
-" This is vims default actually:
-set fileencodings=ucs-bom,utf-8,latin1
-
 
 if has("autocmd")
 	" Don't write backups and don't use autoindent for mutt-files.
