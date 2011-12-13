@@ -1,19 +1,19 @@
 set nocompatible          " Use Vim defaults
-set backup            	  " Keep a backup file
-set ruler				  " Show cursorposition
-set showmode			  " Show current mode.
-set showcmd 			  " Show (partial) commands in status line.
-set modelines=2			  " Enable Modelines
-set showmatch			  " Show matching brackets
+set backup                " Keep a backup file
+set ruler                 " Show cursorposition
+set showmode              " Show current mode.
+set showcmd               " Show (partial) commands in status line.
+set modelines=2           " Enable Modelines
+set showmatch             " Show matching brackets
 set matchpairs+=<:>       " Add pointy brackets to matchpairs
-set viminfo='20,\"50,h	  " Read/write a .viminfo file, don't store more
+set viminfo='20,\"50,h    " Read/write a .viminfo file, don't store more
                           " Than 50 lines of registers
 filetype plugin indent on " file type and plugin indention
-set title				  " set Terminals Title.
+set title                 " set Terminals Title.
 set nostartofline         " don't jump cursor around. Stay in one column
 set vb t_vb=              " turn the bell off. 
 let mapleader = ","       " my custom mappings are introduced by ',' 
-set autowrite			  " Save before :make :suspend, etc 
+set autowrite             " Save before :make :suspend, etc 
 set encoding=utf-8        " use utf-8 as default encoding. 
 
 " Whitespace
@@ -21,14 +21,14 @@ set encoding=utf-8        " use utf-8 as default encoding.
 set backspace=indent,eol,start 
 set wrap                  " Enable line Wrapping
 set linebreak             " Wrap at word
-set tabstop=4			  " Tabwidth
-set shiftwidth=4 		  " Indention 
-set softtabstop=4		  " Make sure all tabs are 4 spaces 
+set tabstop=4             " Tabwidth
+set shiftwidth=4          " Indention 
+set softtabstop=4         " Make sure all tabs are 4 spaces 
 set expandtab             " Expand tabs to spaces
 set smarttab              " Backspace at the beginning of Line removes indention
 
 " Searching
-set incsearch			  " Incremental search. Search while typing.
+set incsearch             " Incremental search. Search while typing.
 set ignorecase            " Searches are case insensitive
 set smartcase             " Unless they contain at least one capital letter.
 
@@ -36,14 +36,14 @@ set smartcase             " Unless they contain at least one capital letter.
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
 if &t_Co > 2 || has("gui_running")
-	syntax enable
-	let highlight_balanced_quotes = 1
-	let highlight_function_name = 2
-	set hlsearch          " highlight search
+    syntax enable
+    let highlight_balanced_quotes = 1
+    let highlight_function_name = 2
+    set hlsearch          " highlight search
 endif
 
 if has('gui_running')
-	set background=light
+    set background=light
 else
     " friendly color scheme
     colorscheme ron
@@ -63,21 +63,21 @@ nmap <leader>d :r !date +\%Y-\%m-\%d<CR>
 
 
 if has("autocmd")
-	" Don't write backups and don't use autoindent for mutt-files.
-	" Oh, and no title please.
-	au BufNewFile,BufRead ~/tmp/mutt*  set tw=72 nobackup noai notitle
+    " Don't write backups and don't use autoindent for mutt-files.
+    " Oh, and no title please.
+    au BufNewFile,BufRead ~/tmp/mutt*  set tw=72 nobackup noai notitle
 
-	" Don't write backup files for files in '/tmp'
-	au BufNewFile,BufWrite /tmp/* set nobackup
+    " Don't write backup files for files in '/tmp'
+    au BufNewFile,BufWrite /tmp/* set nobackup
 
     " Don't write backup files for svn-commits.
     au BufNewFile,BufWrite svn-commit.tmp set nobackup 
 
-	" In text files, always limit the width of text to 78 characters
-	au BufNewFile,BufRead *.txt set tw=78 
+    " In text files, always limit the width of text to 78 characters
+    au BufNewFile,BufRead *.txt set tw=78 
 
-	" When editing perlfiles use smartindent 
-	au FileType perl set cindent
+    " When editing perlfiles use smartindent 
+    au FileType perl set cindent
     au FileType perl set cinwords+=elsif,foreach,sub,unless,until
     au FileType perl set cinoptions&
 
