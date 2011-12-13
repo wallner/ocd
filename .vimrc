@@ -8,6 +8,7 @@ set showmatch			 " show matching brackets
 set matchpairs+=<:>      " add pointy brackets to matchpairs
 set viminfo='20,\"50,h	 " read/write a .viminfo file, don't store more
                          " than 50 lines of registers
+filetype plugin indent on " File type and plugin indention
 set title				 " Set Terminals Title.
 set nostartofline        " Don't jump cursor around. Stay in one column
 set vb t_vb=             " Turn the bell off. 
@@ -29,11 +30,6 @@ set smarttab             " Backspace at the beginning of Line removes indention
 set incsearch			 " Incremental search. Search while typing.
 set ignorecase smartcase " case insensitive search by default
 
-if version >=600
-	filetype plugin indent on " Filetype 
-else
-	filetype on
-endif
 
 " Press Space to turn off highlighting and clear any message already
 " displayed.
