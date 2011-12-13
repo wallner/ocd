@@ -57,10 +57,6 @@ nmap <leader>w <C-w><C-w>_
 
 nmap <leader>d :r !date +\%Y-\%m-\%d<CR>
 
-" NERD Tree
-let g:NERDTreeQuitOnOpen = 1
-nmap <silent> <leader>n :NERDTreeToggle<CR>
-
 " Line Wrapping
 set wrap
 set linebreak "Wrap at word
