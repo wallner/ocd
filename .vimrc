@@ -1,40 +1,36 @@
-set nocompatible         " Use Vim defaults
-set backup            	 " keep a backup file
-set ruler				 " show cursorposition
-set showmode			 " Show current mode.
-set showcmd 			 " Show (partial) commands in status line.
-set modelines=2			 " Enable Modelines
-set showmatch			 " show matching brackets
-set matchpairs+=<:>      " add pointy brackets to matchpairs
-set viminfo='20,\"50,h	 " read/write a .viminfo file, don't store more
-                         " than 50 lines of registers
-filetype plugin indent on " File type and plugin indention
-set title				 " Set Terminals Title.
-set nostartofline        " Don't jump cursor around. Stay in one column
-set vb t_vb=             " Turn the bell off. 
-let mapleader = ","      " My custom mappings are introduced by ',' 
-set autowrite			 " save before :make :suspend, etc 
+set nocompatible          " Use Vim defaults
+set backup            	  " Keep a backup file
+set ruler				  " Show cursorposition
+set showmode			  " Show current mode.
+set showcmd 			  " Show (partial) commands in status line.
+set modelines=2			  " Enable Modelines
+set showmatch			  " Show matching brackets
+set matchpairs+=<:>       " Add pointy brackets to matchpairs
+set viminfo='20,\"50,h	  " Read/write a .viminfo file, don't store more
+                          " Than 50 lines of registers
+filetype plugin indent on " file type and plugin indention
+set title				  " set Terminals Title.
+set nostartofline         " don't jump cursor around. Stay in one column
+set vb t_vb=              " turn the bell off. 
+let mapleader = ","       " my custom mappings are introduced by ',' 
+set autowrite			  " Save before :make :suspend, etc 
+set encoding=utf-8        " use utf-8 as default encoding. 
 
 " Whitespace
-                         " Allow backspacing over everything in insert mode
+                          " Allow backspacing over everything in insert mode
 set backspace=indent,eol,start 
-set wrap                 " Enable line Wrapping
-set linebreak            " Wrap at word
-set tabstop=4			 " Tabwidth
-set shiftwidth=4 		 " Indention 
-set softtabstop=4		 " make sure all tabs are 4 spaces 
-set expandtab            " Expand tabs to spaces
-set smarttab             " Backspace at the beginning of Line removes indention
+set wrap                  " Enable line Wrapping
+set linebreak             " Wrap at word
+set tabstop=4			  " Tabwidth
+set shiftwidth=4 		  " Indention 
+set softtabstop=4		  " Make sure all tabs are 4 spaces 
+set expandtab             " Expand tabs to spaces
+set smarttab              " Backspace at the beginning of Line removes indention
 
 " Searching
-set incsearch			 " Incremental search. Search while typing.
-set ignorecase smartcase " case insensitive search by default
-
-
-" Press Space to turn off highlighting and clear any message already
-" displayed.
-:noremap <silent> <Space> :silent noh<Bar>echo<CR>
-
+set incsearch			  " Incremental search. Search while typing.
+set ignorecase            " Searches are case insensitive
+set smartcase             " Unless they contain at least one capital letter.
 
 
 " Switch syntax highlighting on, when the terminal has colors
@@ -43,7 +39,7 @@ if &t_Co > 2 || has("gui_running")
 	syntax enable
 	let highlight_balanced_quotes = 1
 	let highlight_function_name = 2
-	set hlsearch         " highlight search
+	set hlsearch          " highlight search
 endif
 
 if has('gui_running')
@@ -65,8 +61,6 @@ nmap <leader>d :r !date +\%Y-\%m-\%d<CR>
 
 
 
-" Use utf-8 as default encoding. 
-set encoding=utf-8
 
 if has("autocmd")
 	" Don't write backups and don't use autoindent for mutt-files.
@@ -116,7 +110,10 @@ imap <C-@> <C-Space>
 map <F5> :set number<CR>     " Turn on linenumbers.
 map <F4> :nohl<CR>           " Turn off the highliting of the search.
 map <F6> :set nonumber<CR>   " Turn off linenumbers.
-map gg 1G                    " gg jumps to first line of buffer
+
+" Press Space to turn off highlighting and clear any message already
+" displayed.
+:noremap <silent> <Space> :silent noh<Bar>echo<CR>
 
 " perl-stuff
 
