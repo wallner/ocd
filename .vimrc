@@ -37,8 +37,6 @@ set smartcase             " Unless they contain at least one capital letter.
 " Also switch on highlighting the last used search pattern.
 if &t_Co > 2 || has("gui_running")
     syntax enable
-    let highlight_balanced_quotes = 1
-    let highlight_function_name = 2
     set hlsearch          " highlight search
 endif
 
@@ -65,7 +63,12 @@ nmap <leader>d :r !date +\%Y-\%m-\%d<CR>
 if has("autocmd")
     " Don't write backups and don't use autoindent for mutt-files.
     " Oh, and no title please.
+    " I'm not sure if I should leave this in. Have not been using 
+    " mutt for ages.
     au BufNewFile,BufRead ~/tmp/mutt*  set tw=72 nobackup noai notitle
+
+    " Makefiles have real Tabs
+    au FileType make set noexpandtab
 
     " Don't write backup files for files in '/tmp'
     au BufNewFile,BufWrite /tmp/* set nobackup
@@ -74,7 +77,7 @@ if has("autocmd")
     au BufNewFile,BufWrite svn-commit.tmp set nobackup 
 
     " In text files, always limit the width of text to 78 characters
-    au BufNewFile,BufRead *.txt set tw=78 
+    au BufNewFile,BufRead *.txt set tw=79 
 
     " When editing perlfiles use smartindent 
     au FileType perl set cindent
@@ -86,12 +89,10 @@ if has("autocmd")
     au FileType perl vnoremap <silent> <leader>t :!perltidy -q<CR>
     au FileType perl set makeprg=perl\ -c\ %\ $* 
     au FileType perl set errorformat=%f:%l:%m
-    au FileType perl vmap <leader>c :s/^/#/gi<Enter>
-    au FileType perl vmap <leader>C :s/^#//gi<Enter>
+    au FileType perl vmap <leader>c :s/^/#/gi<CR> :nohl <CR>
+    au FileType perl vmap <leader>C :s/^#//gi<CR> :nohl <CR>
     au FileType perl noremap <leader>h :!perldoc <cword> <bar><bar> perldoc -f <cword> <cword><cr> 
 
-    " Makefiles have real Tabs
-    au FileType make   set noexpandtab
 
 endif " has("autocmd")
 
