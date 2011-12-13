@@ -8,6 +8,7 @@ set showmatch             " Show matching brackets
 set matchpairs+=<:>       " Add pointy brackets to matchpairs
 set viminfo='20,\"50,h    " Read/write a .viminfo file, don't store more
                           " Than 50 lines of registers
+call pathogen#infect()    " Make use of pathogen
 filetype plugin indent on " file type and plugin indention
 set title                 " set Terminals Title.
 set nostartofline         " don't jump cursor around. Stay in one column
