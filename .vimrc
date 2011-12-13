@@ -1,9 +1,8 @@
 set nocompatible          " Use Vim defaults
 set backup            	  " keep a backup file
-set backspace=2           " allow backspacing over everything in insert mode
 set ruler				  " show cursorposition
 set showmode			  " Show current mode.
-set showcmd 			  " Show (partial) command in status line.
+set showcmd 			  " Show (partial) commands in status line.
 set modelines=2			  " Enable Modelines
 set showmatch			  " show matching brackets
 set matchpairs+=<:>       " add pointy brackets to matchpairs
@@ -15,21 +14,32 @@ set vb t_vb=              " Turn the bell off.
 let mapleader = ","       " My custom mappings are introduced by ',' 
 set autowrite			  " save before :make :suspend, etc 
 
+" Whitespace
+                          " Allow backspacing over everything in insert mode
+set backspace=indent,eol,start 
+set wrap                 " Enable line Wrapping
+set linebreak            " Wrap at word
+set tabstop=4			 " Tabwidth
+set shiftwidth=4 		 " Indention 
+set softtabstop=4		 " make sure all tabs are 4 spaces 
+set expandtab            " Expand tabs to spaces
+set smarttab             " Backspace at the beginning of Line removes indention
+
 " Searching
 set incsearch			  " Incremental search. Search while typing.
 set ignorecase smartcase  " case insensitive search by default
+
+if version >=600
+	filetype plugin indent on " Filetype 
+else
+	filetype on
+endif
 
 " Press Space to turn off highlighting and clear any message already
 " displayed.
 :noremap <silent> <Space> :silent noh<Bar>echo<CR>
 
 
-" Indention
-set tabstop=4			 " Tabwidth
-set shiftwidth=4 		 " indention 
-set softtabstop=4		 " make sure all tabs are 4 spaces 
-set expandtab            " Expand tabs to spaces
-set smarttab             " Backspace at the beginning of Line removes indention
 
 " Switch syntax highlighting on, when the terminal has colors
 " Also switch on highlighting the last used search pattern.
@@ -57,9 +67,7 @@ nmap <leader>w <C-w><C-w>_
 
 nmap <leader>d :r !date +\%Y-\%m-\%d<CR>
 
-" Line Wrapping
-set wrap
-set linebreak "Wrap at word
+
 
 " Use utf-8 as default encoding. 
 set encoding=utf-8
@@ -107,12 +115,6 @@ inoremap <expr> <C-Space> pumvisible() \|\| &omnifunc == '' ?
 imap <C-@> <C-Space>
 
 
-
-if version >=600
-	filetype plugin indent on " Filetype 
-else
-	filetype on
-endif
 
 " My mappings
 map <F5> :set number<CR>     " Turn on linenumbers.
