@@ -33,7 +33,12 @@ fi
 
 # Do we have perlbrew?
 if [[ -d /usr/local/depot/perlbrew ]]; then
+    export PERLBREW_ROOT=/usr/local/depot/perlbrew
     source /usr/local/depot/perlbrew/etc/bashrc
+fi
+
+if [[ -s ${HOME}/.rvm/scripts/rvm ]]; then
+    source ${HOME}/.rvm/scripts/rvm
 fi
 
 # Disabled for the time being. Per default sudo doesn't permit for the users
@@ -251,7 +256,8 @@ for file in ${SOURCE_FILES[@]}; do
         source $file
     fi
 done
-
+debug "Removing duplicate entries from \$PATH"
+typeset -U PATH
 debug "Resetting all temporary variables."
 
 DEBUG=""
