@@ -43,7 +43,7 @@ endif
 if has('gui_running')
     set background=light
 else
-    " friendly color scheme
+   " friendly color scheme
     colorscheme ron
 endif
 
