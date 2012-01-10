@@ -152,7 +152,8 @@ alias ll='ls -l'
 alias la='ls -a' 
 alias cd..="cd .."
 alias \#='sudo'
-alias doch='sudo !!'
+alias todo='todo.pl'
+alias doch='sudo $(fc -ln -1)'
 alias xps='ps aucx | head -1; ps aucx | grep -i '
 
 # Generate some aliases for programs that are not in the
