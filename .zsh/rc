@@ -38,7 +38,7 @@ fi
 if [ -s ${HOME}/.rvm/scripts/rvm ]; then
     debug "Adding RVM support"
     source ${HOME}/.rvm/scripts/rvm
-    $PATH:$HOME/.rvm/bin
+    PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 fi
 
 # Disabled for the time being. Per default sudo doesn't permit for the users
