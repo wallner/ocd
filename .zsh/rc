@@ -30,21 +30,21 @@ if [ -d ${HOME}/bin ]; then
     PATH=${HOME}/bin:$PATH
 fi
 
-
-# Do we have perlbrew?
-if [[ -d /usr/local/depot/perlbrew ]]; then
-    export PERLBREW_ROOT=/usr/local/depot/perlbrew
-    source /usr/local/depot/perlbrew/etc/bashrc
+if [ -s ${HOME}/perl5/perlbrew/etc/bashrc ]; then  
+    debug "Adding perlbrew suport"
+    source ~/perl5/perlbrew/etc/bashrc
 fi
 
-if [[ -s ${HOME}/.rvm/scripts/rvm ]]; then
+if [ -s ${HOME}/.rvm/scripts/rvm ]; then
+    debug "Adding RVM support"
     source ${HOME}/.rvm/scripts/rvm
+    $PATH:$HOME/.rvm/bin
 fi
 
 # Disabled for the time being. Per default sudo doesn't permit for the users
 # umask to be more restrictive than the umask applied with super user
 # priveleges. You can fix it in '/etc/sudoers' but I am not sure wether I want
-# to dothat on all systems.
+# to do that on all systems.
 # 
 # if [ -z $ROOT ]; then
 #  I want my umask tight and tidy
