@@ -4,3 +4,7 @@
 
 [color]
 	ui = true
+[alias]
+	loggraph = log --graph --abbrev-commit --pretty=oneline --all --decorate
+[branch]
+	autosetupmerge = true
