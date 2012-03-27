@@ -6,5 +6,6 @@
 	ui = true
 [alias]
 	loggraph = log --graph --abbrev-commit --pretty=oneline --all --decorate
+	st = status
 [branch]
 	autosetupmerge = true
