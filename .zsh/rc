@@ -127,7 +127,7 @@ RPROMPT="%~"               # display cwd at right side
 PROMPT="%{$fg[yellow]%}%T%{$reset_color%} %n@%m%# " # "Time name@hostname% "
 
 export PAGER=less	       # just in case we are on solaris
-export LESS="-dEiMRSX -P?fFile %f:stdin. ?m(%i of %m) :.line %l ?Lof %L:.?p (%p\%):."
+export LESS="-deiMRSX -P?fFile %f:stdin. ?m(%i of %m) :.line %l ?Lof %L:.?p (%p\%):."
 export LESSCHARSET=utf-8   # Damit less Umlaute als solche anzeigt
 # Format man pages for a wigth of 80 col no matter how wide the terminal
 export MANWIDTH=80
