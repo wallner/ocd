@@ -1,5 +1,5 @@
 set nocompatible          " Use Vim defaults
-set backup                " Keep a backup file
+set nobackup              " Keep no backup file, use something modern
 set ruler                 " Show cursorposition
 set showmode              " Show current mode.
 set showcmd               " Show (partial) commands in status line.
