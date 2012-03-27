@@ -221,7 +221,7 @@ case $TERM in
 		precmd ()  {print -Pn "\e]0;%n@%m: %~\a"} 
         preexec () {print -Pn "\e]0;%n@%m: [$1]\a"} 
 	;;
-    screen)
+    screen*)
         precmd()  {print -Pn "\ek %n@%m: %~\e\\"}
         preexec() {print -Pn "\ek %n@%m: [$1]\e\\"}
 	;;
