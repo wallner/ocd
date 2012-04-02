@@ -126,6 +126,12 @@ autoload -U colors && colors
 RPROMPT="%~"               # display cwd at right side
 PROMPT="%{$fg[yellow]%}%T%{$reset_color%} %n@%m%# " # "Time name@hostname% "
 
+# load the right colorschema. We are using solarized here
+DIRCOLORPATH="${HOME}/.zsh/dircolors"
+DIRCOLORSCHEMA=`cat ${DIRCOLORPATH}/schema`
+debug "Using solarized schema: ${DIRCOLORSCHEMA}"
+eval `dircolors ${DIRCOLORPATH}/dircolors.ansi-${DIRCOLORSCHEMA}`
+
 export PAGER=less	       # just in case we are on solaris
 export LESS="-deiMRSX -P?fFile %f:stdin. ?m(%i of %m) :.line %l ?Lof %L:.?p (%p\%):."
 export LESSCHARSET=utf-8   # Damit less Umlaute als solche anzeigt

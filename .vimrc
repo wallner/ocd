@@ -43,9 +43,13 @@ endif
 if has('gui_running')
     set background=light
 else
-   " friendly color scheme
-    colorscheme ron
+    set background=dark
 endif
+
+" friendly color scheme
+set t_Co=16
+colorscheme solarized
+
 
 " Window management
 " split window vertically with <leader> v
