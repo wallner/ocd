@@ -107,7 +107,7 @@ if [[ -x /usr/bin/vim || -x /usr/local/bin/vim ]] then
 	export EDITOR=vim
 else 
     # I catch myself very often typing 'vim' 'though I know its not 
-    # there... So I help myself :-)
+    # there... So I help myself.
     
 	export EDITOR=vi
 	debug "Setting \$EDITOR to $EDITOR and setting up vim alias."
@@ -146,14 +146,6 @@ export LANG=en_US.UTF-8
 alias mv='nocorrect mv'    # no spelling correction on mv
 alias cp='nocorrect cp'    # no spelling correction on cp
 alias mkdir='nocorrect mkdir' # no spelling correction on mkdir
-
-# Buntes ls
-
-if [ "$TERM" != "dumb" ]; then 
-#    eval "`dircolors -b`" not needed
-    alias ls='ls --color=auto'
-fi
-
 alias ll='ls -l'
 alias la='ls -a' 
 alias cd..="cd .."
@@ -161,6 +153,15 @@ alias \#='sudo'
 alias todo='todo.pl'
 alias doch='sudo $(fc -ln -1)'
 alias xps='ps aucx | head -1; ps aucx | grep -i '
+alias tmux="TERM=screen-256color-bce tmux"
+
+# Colorful ls
+
+if [ "$TERM" != "dumb" ]; then 
+#    eval "`dircolors -b`" not needed
+    alias ls='ls --color=auto'
+fi
+
 
 # Generate some aliases for programs that are not in the
 # usual path, unless for root that is.

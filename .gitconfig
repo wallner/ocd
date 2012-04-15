@@ -9,3 +9,5 @@
 	st = status
 [branch]
 	autosetupmerge = true
+[core]
+	excludesfile = /home/wallner/.gitexcludes
