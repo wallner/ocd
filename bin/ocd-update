@@ -1,7 +1,9 @@
 #!/bin/sh
 
+cd $HOME/.ocd
+
 BACKUP_DST="$HOME/.ocd_backup.tar.gz"
-IGNORE_RE="(update|downdate|README|\.git/)"
+IGNORE_RE="^\./(update$|downdate$|README$|\.git)"
 FILES=$(find . -type f | egrep -v  "$IGNORE_RE")
 DIRS=$(find . -type d | egrep -v  "$IGNORE_RE")
 
