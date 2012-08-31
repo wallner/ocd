@@ -61,8 +61,6 @@ export HISTSIZE=4096
 export SAVEHIST=4096
 export HISTFILE=$HOME/.zsh/history
 
-# try to get the right Terminal-Type 
-
 # Informs us about who loggs in or out on our system. If the file
 # '~/.zsh/users' exists only the activity of the users in there 
 # is monitored, all users otherwise.
