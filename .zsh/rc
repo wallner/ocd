@@ -76,19 +76,15 @@ fi
 export LOGCHECK=60 # check all sixty seconds for login/logout activity
 export WATCHFMT="%n %a on %l from %M at %T"
 
-if [ -f $HOME/.zsh/hosts ]; then
-   hostnames=( $(<$HOME/.zsh/hosts) )
-fi
 
 # The options. Here are only those listed that are changed from the defaults.
-
-# Changing Directories
-
+# They are ordered alphabetically not by subject.
 setopt ALWAYS_TO_END       # Move to end of word after completion
 setopt AUTO_CD             # If an unknown command is a directory cd into it.
 setopt BRACE_CCL           # Expand expressions in braces
 setopt COMPLETE_IN_WORD    # Don't move to end of word when completeing.
 setopt CORRECT             # Try auto correction of commands
+setopt EQUALS              # Filename expansion on right hand side of '='
 setopt HIST_IGNORE_ALLDUPS # Remove all duplicates from the history
 setopt HIST_NOSTORE        # Don't store history in the history
 setopt HIST_REDUCE_BLANKS  # Remove all superflous blanks from history entries
@@ -160,7 +156,6 @@ if [ "$TERM" != "dumb" ]; then
     alias ls='ls --color=auto'
 fi
 
-
 # Generate some aliases for programs that are not in the
 # usual path, unless for root that is.
 
@@ -198,8 +193,21 @@ zstyle ':completion:*' group-name ''
 # match uppercase from lowercase
 zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 
+# activate menu selection
+zstyle ':completion:*' menu select
+
+# activate approximate completion, but only after regular completion (_complete)
+zstyle ':completion:::::' completer _complete _approximate
+# limit to one error per 3 character typed
+zstyle ':completion:*:approximate:*' max-errors 'reply=( $(( ($#PREFIX+$#SUFFIX)/3 )) numeric )'
+
 # offer indexes before parameters in subscripts
 zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
+
+
+if [ -f $HOME/.zsh/hosts ]; then
+   hostnames=( $(<$HOME/.zsh/hosts) )
+fi
 
 zstyle ':completion:*:hosts' hosts $hostnames
 
