@@ -126,11 +126,21 @@ DIRCOLORSCHEMA=`cat ${DIRCOLORPATH}/schema`
 debug "Using solarized schema: ${DIRCOLORSCHEMA}"
 eval `dircolors ${DIRCOLORPATH}/dircolors.ansi-${DIRCOLORSCHEMA}`
 
+# Set up less 
 export PAGER=less	       # just in case we are on solaris
-export LESS="-deiMRSX -P?fFile %f:stdin. ?m(%i of %m) :.line %l ?Lof %L:.?p (%p\%):."
+export LESS="-deFgiMRSX -P?fFile %f:stdin. ?m(%i of %m) :.line %l ?Lof %L:.?p (%p\%):."
 export LESSCHARSET=utf-8   # Damit less Umlaute als solche anzeigt
 # Format man pages for a wigth of 80 col no matter how wide the terminal
 export MANWIDTH=80
+
+if [ -f /usr/share/source-highlight/src-hilite-lesspipe.sh ]; then
+    # Debian / Ubuntu
+    LESSOPEN="| /usr/share/source-highlight/src-hilite-lesspipe.sh %s"
+elif [ -f /usr/bin/src-hilite-lesspipe.sh ]; then
+    LESSOPEN="| /usr/bin/src-hilite-lesspipe.sh %s"
+fi
+
+
 
 # Don't ignore leading dots when sorting.
 export LC_COLLATE="C"
