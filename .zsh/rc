@@ -196,11 +196,6 @@ zstyle ':completion:*' matcher-list 'm:{a-z}={A-Z}'
 # activate menu selection
 zstyle ':completion:*' menu select
 
-# activate approximate completion, but only after regular completion (_complete)
-zstyle ':completion:::::' completer _complete _approximate
-# limit to one error per 3 character typed
-zstyle ':completion:*:approximate:*' max-errors 'reply=( $(( ($#PREFIX+$#SUFFIX)/3 )) numeric )'
-
 # offer indexes before parameters in subscripts
 zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
 
