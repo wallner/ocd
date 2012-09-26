@@ -5,8 +5,6 @@ cd $HOME/.ocd
 IGNORE_RE="^\./(README$|\.git)"
 FILES=$(find . -type f | egrep -v  "$IGNORE_RE")
 
-cd $HOME/.ocd
-
 for file in $FILES;do
   printf .
   dst="$file"
