@@ -1,6 +1,5 @@
 #!/bin/sh
 
-cd $HOME/.ocd
 
 BACKUP_DST="$HOME/.ocd_backup.tar.gz"
 IGNORE_RE="^\./(README$|\.git)"
