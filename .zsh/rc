@@ -19,9 +19,9 @@ if [ `id -u` -eq 0 ]; then
 	ROOT='true'
 fi
 
-if [ -d /usr/local/sw/apache-maven ]; then
-    debug "Prepending /usr/local/sw/apache-maven to PATH"
-    PATH=/usr/local/sw/apache-maven/bin:$PATH
+if [ -d /usr/local/sw/grails ]; then
+    debug "Prepending /usr/local/sw/grails to PATH"
+    PATH=/usr/local/sw/grails/bin:$PATH
 fi
 
 # Make sure we've got ack in the path!
@@ -147,7 +147,7 @@ alias \#='sudo'
 alias todo='todo.pl'
 alias doch='sudo $(fc -ln -1)'
 alias xps='ps aucx | head -1; ps aucx | grep -i '
-alias tmux="TERM=screen-256color-bce tmux"
+alias tmux="TERM=screen-256color tmux"
 
 # Colorful ls
 

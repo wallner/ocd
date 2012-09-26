@@ -1,9 +1,4 @@
 OPTIONS=eight_bit_tty,autodig,time,lootabc
 OPTIONS=pickup_types:$+!=?/"
 OPTIONS=showscore,showexp
-OPTIONS=!rest_on_space,color,menucolors
-MENUCOLOR=" blessed "=green
-MENUCOLOR=" holy "=green
-MENUCOLOR=" cursed "=red
-MENUCOLOR=" unholy "=red
-MENUCOLOR=" cursed .* (being worn)"=orange&underline
+OPTIONS=!rest_on_space,color
