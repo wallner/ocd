@@ -210,9 +210,8 @@ zstyle ':completion:*' menu select
 zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
 
 
-if [ -f $HOME/.zsh/hosts ]; then
-   hostnames=( $(<$HOME/.zsh/hosts) )
-fi
+local hostnames
+hostnames=( ${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[0-9]*}%%\ *}%%,*} )
 
 zstyle ':completion:*:hosts' hosts $hostnames
 
