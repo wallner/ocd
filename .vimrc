@@ -1,15 +1,39 @@
 set nocompatible          " Use Vim defaults
-set nobackup              " Keep no backup file, use something modern
-set ruler                 " Show cursorposition
-set showmode              " Show current mode.
-set showcmd               " Show (partial) commands in status line.
-set modelines=2           " Enable Modelines
-set showmatch             " Show matching brackets
+
+" Setting up Vundle - the vim plugin bundler
+let vundle_installed=1
+let vundle_readme=expand('~/.vim/bundle/vundle/README.md')
+if !filereadable(vundle_readme)
+    echo "Installing Vundle.."
+    echo ""
+    silent !mkdir -p ~/.vim/bundle
+    silent !git clone https://github.com/gmarik/vundle ~/.vim/bundle/vundle
+    let vundle_installed=0
+endif
+set rtp+=~/.vim/bundle/vundle/
+call vundle#rc()
+Bundle 'gmarik/vundle'
+"Add your bundles here
+Bundle 'altercation/vim-colors-solarized' 
+Bundle 'kana/vim-smartinput'
+Bundle 'tpope/vim-surround'
+Bundle 'tpope/vim-repeat'
+Bundle 'kien/ctrlp.vim'
+
+if vundle_installed == 0
+    echo "Installing Bundles, please ignore key map error messages"
+    echo ""
+    :BundleInstall
+endif
+
+filetype plugin indent on " file type and plugin indention
+
+set nobackup              " Keep no backup file, use version control
+set modelines=2           " Enable modelines in files
 set matchpairs+=<:>       " Add pointy brackets to matchpairs
 set viminfo='20,\"50,h    " Read/write a .viminfo file, don't store more
                           " Than 50 lines of registers
-call pathogen#infect()    " Make use of pathogen
-filetype plugin indent on " file type and plugin indention
+
 set title                 " set Terminals Title.
 set nostartofline         " don't jump cursor around. Stay in one column
 set vb t_vb=              " turn the bell off. 
@@ -21,6 +45,7 @@ set encoding=utf-8        " use utf-8 as default encoding.
                           " Allow backspacing over everything in insert mode
 set backspace=indent,eol,start 
 set wrap                  " Enable line Wrapping
+set autoindent            " take indent for new line from previous line
 set linebreak             " Wrap at word
 set tabstop=4             " Tabwidth
 set shiftwidth=4          " Indention 
@@ -32,24 +57,30 @@ set smarttab              " Backspace at the beginning of Line removes indention
 set incsearch             " Incremental search. Search while typing.
 set ignorecase            " Searches are case insensitive
 set smartcase             " Unless they contain at least one capital letter.
+set hlsearch              " highlight search
 
-" Switch syntax highlighting on, when the terminal has colors
-" Also switch on highlighting the last used search pattern.
-if &t_Co > 2 || has("gui_running")
-    syntax enable
-    set hlsearch          " highlight search
+" User Interface
+syntax enable             " Syntax highlight on.
+set cursorline            " Highlight the line the cursor's in
+set showcmd               " Show (partial) commands in status line.
+set ruler                 " Show cursorposition
+set showmode              " Show current mode.
+set showmatch             " Show matching brackets
+set wildmenu              " Show lists instead of just completing
+if filereadable(expand('~/.vim/bundle/vim-colors-solarized/colors/solarized.vim'))
+    let g:solarized_termcolors=256
+    let g:solarized_termtrans=1
+    let g:solarized_contrast="high"
+    let g:solarized_visibility="high"
+    color solarized
 endif
 
 if has('gui_running')
     set background=light
+    set linespace=1
 else
     set background=dark
 endif
-
-" friendly color scheme
-set t_Co=16
-colorscheme solarized
-
 
 " Window management
 " split window vertically with <leader> v
@@ -73,12 +104,6 @@ if has("autocmd")
 
     " Makefiles have real Tabs
     au FileType make set noexpandtab
-
-    " Don't write backup files for files in '/tmp'
-    au BufNewFile,BufWrite /tmp/* set nobackup
-
-    " Don't write backup files for svn-commits.
-    au BufNewFile,BufWrite svn-commit.tmp set nobackup 
 
     " In text files, always limit the width of text to 78 characters
     au BufNewFile,BufRead *.txt set tw=79 
@@ -108,8 +133,6 @@ inoremap <expr> <C-Space> pumvisible() \|\| &omnifunc == '' ?
             \ "\"\\<lt>c-n>\\<lt>c-p>\\<lt>c-n>\" :" .
             \ "\" \\<lt>bs>\\<lt>C-n>\"\<CR>"
 imap <C-@> <C-Space>
-
-
 
 " My mappings
 map <F5> :set number<CR>     " Turn on linenumbers.
