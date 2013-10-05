@@ -12,13 +12,17 @@ endif
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 Bundle 'gmarik/vundle'
-
+" colorscheme of choice
 Bundle 'altercation/vim-colors-solarized' 
 Bundle 'spf13/vim-autoclose'
 Bundle 'tpope/vim-surround'
+" make repetition work well with plugins
 Bundle 'tpope/vim-repeat'
+" Fancier status line
 Bundle 'bling/vim-airline'
+" Fancy file management
 Bundle 'kien/ctrlp.vim'
+" Visualization of modified files for git and svn (better than gitgutter)
 Bundle 'mhinz/vim-signify'
 
 if vundle_installed == 0
@@ -60,6 +64,26 @@ set ignorecase            " Searches are case insensitive
 set smartcase             " Unless they contain at least one capital letter.
 set hlsearch              " highlight search
 
+" CtrlP configuration
+let g:ctrlp_working_path_mode = 'ra'
+let g:ctrlp_custom_ignore = {
+    \ 'dir':  '\.git$\|\.svn$',
+    \ 'file': '\.so$\|\.pyc$\|\.jar$' }
+
+let g:ctrlp_user_command = {
+    \ 'types': {
+    \ 1: ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others'],
+    \ },
+    \ 'fallback': 'find %s -type f'
+\ }
+
+" Signify configuration
+let g:signify_vcs_list = [ 'git', 'svn' ]
+let g:signigy_diffoptions = { 'git': '-w', }
+" mapping
+let g:signify_mapping_next_hunk = '<leader>gj'
+let g:signify_mapping_prev_hunk = '<leader>gk'
+
 " User Interface
 syntax enable             " Syntax highlight on.
 set cursorline            " Highlight the line the cursor's in
@@ -70,28 +94,27 @@ set wildmenu              " Show lists instead of just completing
 set laststatus=2          " Always show a status line
 set noshowmode            " Get rid of default mode indicator
 
-if filereadable(expand('~/.vim/bundle/vim-colors-solarized/colors/solarized.vim'))
-    let g:solarized_termcolors=256
-    let g:solarized_termtrans=1
-    let g:solarized_contrast="high"
-    let g:solarized_visibility="high"
-    color solarized
-endif
-
 if has('gui_running')
     set background=light
     set linespace=1
 else
     set background=dark
 endif
-" This is for solarized colorscheme
-highlight SignColumn ctermbg=235 guibg=#eee8d5
 
-let g:signify_vcs_list = [ 'git', 'svn' ]
-let g:signigy_diffoptions = { 'git': '-w', }
 
-nmap <leader>gj <plug>(signify-next-jump)
-nmap <leader>gk <plug>(signify-prev-jump)
+if filereadable(expand('~/.vim/bundle/vim-colors-solarized/colors/solarized.vim'))
+    let g:solarized_termcolors=256
+    let g:solarized_termtrans=1
+    let g:solarized_contrast="high"
+    let g:solarized_visibility="high"
+    color solarized
+    " Make signcolumn look better.
+    highlight SignColumn ctermbg=235 guibg=#eee8d5
+endif
+
+
+let g:airline_left_sep='›'  " Slightly fancier than '>'
+let g:airline_right_sep='‹' " Slightly fancier than '<'
 
 " Window management
 " split window vertically with <leader> v
@@ -147,7 +170,6 @@ imap <C-@> <C-Space>
 
 " My mappings
 map <F5> :set number<CR>     " Turn on linenumbers.
-map <F4> :nohl<CR>           " Turn off the highliting of the search.
 map <F6> :set nonumber<CR>   " Turn off linenumbers.
 
 " Press Space to turn off highlighting and clear any message already
