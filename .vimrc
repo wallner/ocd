@@ -1,5 +1,4 @@
 set nocompatible          " Use Vim defaults
-
 " Setting up Vundle - the vim plugin bundler
 let vundle_installed=1
 let vundle_readme=expand('~/.vim/bundle/vundle/README.md')
@@ -13,12 +12,14 @@ endif
 set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 Bundle 'gmarik/vundle'
-"Add your bundles here
+
 Bundle 'altercation/vim-colors-solarized' 
-Bundle 'kana/vim-smartinput'
+Bundle 'spf13/vim-autoclose'
 Bundle 'tpope/vim-surround'
 Bundle 'tpope/vim-repeat'
+Bundle 'bling/vim-airline'
 Bundle 'kien/ctrlp.vim'
+Bundle 'mhinz/vim-signify'
 
 if vundle_installed == 0
     echo "Installing Bundles, please ignore key map error messages"
@@ -43,7 +44,7 @@ set encoding=utf-8        " use utf-8 as default encoding.
 
 " Whitespace
                           " Allow backspacing over everything in insert mode
-set backspace=indent,eol,start 
+set backspace=indent,eol,start
 set wrap                  " Enable line Wrapping
 set autoindent            " take indent for new line from previous line
 set linebreak             " Wrap at word
@@ -51,7 +52,7 @@ set tabstop=4             " Tabwidth
 set shiftwidth=4          " Indention 
 set softtabstop=4         " Make sure all tabs are 4 spaces 
 set expandtab             " Expand tabs to spaces
-set smarttab              " Backspace at the beginning of Line removes indention
+set smarttab              " Backspace at beginning of line removes indention
 
 " Searching
 set incsearch             " Incremental search. Search while typing.
@@ -64,9 +65,11 @@ syntax enable             " Syntax highlight on.
 set cursorline            " Highlight the line the cursor's in
 set showcmd               " Show (partial) commands in status line.
 set ruler                 " Show cursorposition
-set showmode              " Show current mode.
 set showmatch             " Show matching brackets
 set wildmenu              " Show lists instead of just completing
+set laststatus=2          " Always show a status line
+set noshowmode            " Get rid of default mode indicator
+
 if filereadable(expand('~/.vim/bundle/vim-colors-solarized/colors/solarized.vim'))
     let g:solarized_termcolors=256
     let g:solarized_termtrans=1
@@ -81,6 +84,14 @@ if has('gui_running')
 else
     set background=dark
 endif
+" This is for solarized colorscheme
+highlight SignColumn ctermbg=235 guibg=#eee8d5
+
+let g:signify_vcs_list = [ 'git', 'svn' ]
+let g:signigy_diffoptions = { 'git': '-w', }
+
+nmap <leader>gj <plug>(signify-next-jump)
+nmap <leader>gk <plug>(signify-prev-jump)
 
 " Window management
 " split window vertically with <leader> v
