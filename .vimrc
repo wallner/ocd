@@ -14,6 +14,7 @@ call vundle#rc()
 Bundle 'gmarik/vundle'
 " colorscheme of choice
 Bundle 'altercation/vim-colors-solarized' 
+" close opened parantheses and '"
 Bundle 'spf13/vim-autoclose'
 Bundle 'tpope/vim-surround'
 " make repetition work well with plugins
@@ -24,6 +25,16 @@ Bundle 'bling/vim-airline'
 Bundle 'kien/ctrlp.vim'
 " Visualization of modified files for git and svn (better than gitgutter)
 Bundle 'mhinz/vim-signify'
+" Completion on steroids
+Bundle 'Shougo/neocomplcache.vim'
+" Snipets
+Bundle 'Shougo/neosnippet'
+" Honza's snippets 
+Bundle 'honza/vim-snippets'
+" use tagbar if ctags is available
+if executable('ctags')
+    Bundle 'majutsushi/tagbar'
+endif
 
 if vundle_installed == 0
     echo "Installing Bundles, please ignore key map error messages"
@@ -42,9 +53,9 @@ set viminfo='20,\"50,h    " Read/write a .viminfo file, don't store more
 set title                 " set Terminals Title.
 set nostartofline         " don't jump cursor around. Stay in one column
 set vb t_vb=              " turn the bell off. 
-let mapleader = ","       " my custom mappings are introduced by ',' 
 set autowrite             " Save before :make :suspend, etc 
 set encoding=utf-8        " use utf-8 as default encoding. 
+let mapleader = ","       " my custom mappings are introduced by ',' 
 
 " Whitespace
                           " Allow backspacing over everything in insert mode
@@ -64,6 +75,48 @@ set ignorecase            " Searches are case insensitive
 set smartcase             " Unless they contain at least one capital letter.
 set hlsearch              " highlight search
 
+" neocomplcache configuration
+" Disable AutoComplPop.
+let g:acp_enableAtStartup = 0
+" Use neocomplcache.
+let g:neocomplcache_enable_at_startup = 1
+" Use smartcase.
+let g:neocomplcache_enable_smart_case = 1
+" limit number of completions to 15
+let g:neocomplcache_max_list = 15
+" use smart case
+let g:neocomplcache_enable_smart_case = 1
+" enable camelcase completion
+let g:neocomplcache_enable_camel_case_completion = 1
+" enable underbar completion
+let g:neocomplcache_enable_underbar_completion = 1
+
+" Define keyword.
+if !exists('g:neocomplcache_keyword_patterns')
+    let g:neocomplcache_keyword_patterns = {}
+endif
+let g:neocomplcache_keyword_patterns._ = '\h\w*'
+" Highlight first canidate
+let g:neocomplcache_enable_auto_select = 1
+
+inoremap <expr><C-l> neocomplcache#complete_common_string()
+inoremap <expr><C-h> neocomplcache#smart_close_popup().“\<C-h>”
+inoremap <expr><BS> neocomplcache#smart_close_popup().“\<C-h>”
+" SuperTab like snippets behavior.
+imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+    \ "\<Plug>(neosnippet_expand_or_jump)"
+    \: pumvisible() ? "\<C-n>" : "\<TAB>"
+smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
+    \ "\<Plug>(neosnippet_expand_or_jump)"
+    \: "\<TAB>"
+
+autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
+
+" Enable heavy omni completion.
+if !exists('g:neocomplete#sources#omni#input_patterns')
+    let g:neocomplete#sources#omni#input_patterns = {}
+endif
+
 " CtrlP configuration
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_custom_ignore = {
@@ -76,6 +129,17 @@ let g:ctrlp_user_command = {
     \ },
     \ 'fallback': 'find %s -type f'
 \ }
+
+" Ctags 
+set tags=./tags;/,~/.vimtags
+" Make tags placed in .git/tags file available in all levels of a repository
+let gitroot = substitute(system('git rev-parse --show-toplevel'), '[\n\r]', '', 'g')
+if gitroot != ''
+    let &tags = &tags . ',' . gitroot . '/.git/tags'
+endif
+
+" Tagbar
+nnoremap <silent> <leader>tt :TagbarToggle<CR>
 
 " Signify configuration
 let g:signify_vcs_list = [ 'git', 'svn' ]
@@ -159,14 +223,6 @@ if has("autocmd")
 
 endif " has("autocmd")
 
-" Bind autocompletion to Ctrl-Space, as known from Netbeans. If 
-" omnicompletion does not find a match, fall back to keyword completion.   
-inoremap <expr> <C-Space> pumvisible() \|\| &omnifunc == '' ?
-            \ "\<lt>C-n>" :
-            \ "\<lt>C-x>\<lt>C-o><c-r>=pumvisible() ?" .
-            \ "\"\\<lt>c-n>\\<lt>c-p>\\<lt>c-n>\" :" .
-            \ "\" \\<lt>bs>\\<lt>C-n>\"\<CR>"
-imap <C-@> <C-Space>
 
 " My mappings
 map <F5> :set number<CR>     " Turn on linenumbers.
