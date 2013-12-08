@@ -13,12 +13,14 @@ set rtp+=~/.vim/bundle/vundle/
 call vundle#rc()
 Bundle 'gmarik/vundle'
 " colorscheme of choice
-Bundle 'altercation/vim-colors-solarized' 
+Bundle 'altercation/vim-colors-solarized'
 " close opened parantheses and '"
 Bundle 'spf13/vim-autoclose'
 Bundle 'tpope/vim-surround'
 " make repetition work well with plugins
 Bundle 'tpope/vim-repeat'
+" proper vim integration
+Bundle 'tpope/vim-fugitive'
 " Fancier status line
 Bundle 'bling/vim-airline'
 " Fancy file management
@@ -29,7 +31,7 @@ Bundle 'mhinz/vim-signify'
 Bundle 'Shougo/neocomplcache.vim'
 " Snipets
 Bundle 'Shougo/neosnippet'
-" Honza's snippets 
+" Honza's snippets
 Bundle 'honza/vim-snippets'
 " use tagbar if ctags is available
 if executable('ctags')
@@ -52,10 +54,10 @@ set viminfo='20,\"50,h    " Read/write a .viminfo file, don't store more
 
 set title                 " set Terminals Title.
 set nostartofline         " don't jump cursor around. Stay in one column
-set vb t_vb=              " turn the bell off. 
-set autowrite             " Save before :make :suspend, etc 
-set encoding=utf-8        " use utf-8 as default encoding. 
-let mapleader = ","       " my custom mappings are introduced by ',' 
+set vb t_vb=              " turn the bell off.
+set autowrite             " Save before :make :suspend, etc
+set encoding=utf-8        " use utf-8 as default encoding.
+let mapleader=","         " my custom mappings are introduced by ','
 
 " Whitespace
                           " Allow backspacing over everything in insert mode
@@ -64,8 +66,8 @@ set wrap                  " Enable line Wrapping
 set autoindent            " take indent for new line from previous line
 set linebreak             " Wrap at word
 set tabstop=4             " Tabwidth
-set shiftwidth=4          " Indention 
-set softtabstop=4         " Make sure all tabs are 4 spaces 
+set shiftwidth=4          " Indention
+set softtabstop=4         " Make sure all tabs are 4 spaces
 set expandtab             " Expand tabs to spaces
 set smarttab              " Backspace at beginning of line removes indention
 
@@ -98,10 +100,9 @@ endif
 let g:neocomplcache_keyword_patterns._ = '\h\w*'
 " Highlight first canidate
 let g:neocomplcache_enable_auto_select = 1
-
+" Don't have the window popup automatically
+let g:neocomplcache_disable_auto_complete = 1
 inoremap <expr><C-l> neocomplcache#complete_common_string()
-inoremap <expr><C-h> neocomplcache#smart_close_popup().“\<C-h>”
-inoremap <expr><BS> neocomplcache#smart_close_popup().“\<C-h>”
 " SuperTab like snippets behavior.
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
     \ "\<Plug>(neosnippet_expand_or_jump)"
@@ -117,6 +118,18 @@ if !exists('g:neocomplete#sources#omni#input_patterns')
     let g:neocomplete#sources#omni#input_patterns = {}
 endif
 
+" Cache completion on ctrl-space in insert mode
+function! Auto_complete_string()
+    if pumvisible()
+        return "\<C-n>"
+    else
+        return "\<C-x>\<C-u>"
+    end
+endfunction
+
+inoremap <expr> <Nul> Auto_complete_string()
+inoremap <expr> <C-Space> Auto_complete_string()
+
 " CtrlP configuration
 let g:ctrlp_working_path_mode = 'ra'
 let g:ctrlp_custom_ignore = {
@@ -130,7 +143,7 @@ let g:ctrlp_user_command = {
     \ 'fallback': 'find %s -type f'
 \ }
 
-" Ctags 
+" Ctags
 set tags=./tags;/,~/.vimtags
 " Make tags placed in .git/tags file available in all levels of a repository
 let gitroot = substitute(system('git rev-parse --show-toplevel'), '[\n\r]', '', 'g')
@@ -138,8 +151,8 @@ if gitroot != ''
     let &tags = &tags . ',' . gitroot . '/.git/tags'
 endif
 
-" Tagbar
-nnoremap <silent> <leader>tt :TagbarToggle<CR>
+" Tagbar and switch to that window.
+nnoremap <silent> <leader>tt :TagbarToggle<CR><C-w><C-w>
 
 " Signify configuration
 let g:signify_vcs_list = [ 'git', 'svn' ]
@@ -147,6 +160,11 @@ let g:signigy_diffoptions = { 'git': '-w', }
 " mapping
 let g:signify_mapping_next_hunk = '<leader>gj'
 let g:signify_mapping_prev_hunk = '<leader>gk'
+
+" The following configuration causes the buffers to be written to disk.
+let g:signify_update_on_bufenter = 1
+let g:signify_update_on_focusgained = 1
+let g:signify_cursorhold_normal = 2000
 
 " User Interface
 syntax enable             " Syntax highlight on.
@@ -177,8 +195,8 @@ if filereadable(expand('~/.vim/bundle/vim-colors-solarized/colors/solarized.vim'
 endif
 
 
-let g:airline_left_sep='›'  " Slightly fancier than '>'
-let g:airline_right_sep='‹' " Slightly fancier than '<'
+let g:airline_powerline_fonts = 1
+let g:airline#extensions#tabline#enabled = 1
 
 " Window management
 " split window vertically with <leader> v
@@ -188,38 +206,17 @@ nmap <leader>s :split<CR> <C-w><C-w>
 " Switch between windows with <leader> w
 nmap <leader>w <C-w><C-w>_
 
-nmap <leader>d :r !date +\%Y-\%m-\%d<CR>
-
-
-
-
 if has("autocmd")
-    " Don't write backups and don't use autoindent for mutt-files.
-    " Oh, and no title please.
-    " I'm not sure if I should leave this in. Have not been using 
+    " Don't use autoindent for mutt-files and don't set the title.
+    " I'm not sure if I should keep this. Have not been using
     " mutt for ages.
-    au BufNewFile,BufRead ~/tmp/mutt*  set tw=72 nobackup noai notitle
+    au BufNewFile,BufRead ~/tmp/mutt*  set tw=72 noai notitle
 
     " Makefiles have real Tabs
     au FileType make set noexpandtab
 
-    " In text files, always limit the width of text to 78 characters
-    au BufNewFile,BufRead *.txt set tw=79 
-
-    " When editing perlfiles use smartindent 
-    au FileType perl set cindent
-    au FileType perl set cinwords+=elsif,foreach,sub,unless,until
-    au FileType perl set cinoptions&
-
-    " Keybindings special to perl
-    au FileType perl nnoremap <silent> <leader>t :%!perltidy -q<CR>
-    au FileType perl vnoremap <silent> <leader>t :!perltidy -q<CR>
-    au FileType perl set makeprg=perl\ -c\ %\ $* 
-    au FileType perl set errorformat=%f:%l:%m
-    au FileType perl vmap <leader>c :s/^/#/gi<CR> :nohl <CR>
-    au FileType perl vmap <leader>C :s/^#//gi<CR> :nohl <CR>
-    au FileType perl noremap <leader>h :!perldoc <cword> <bar><bar> perldoc -f <cword> <cword><cr> 
-
+    " In text files, always limit the width of text to 79 characters
+    au BufNewFile,BufRead *.txt set tw=79
 
 endif " has("autocmd")
 
@@ -232,25 +229,6 @@ map <F6> :set nonumber<CR>   " Turn off linenumbers.
 " displayed.
 :noremap <silent> <Space> :silent noh<Bar>echo<CR>
 
-" perl-stuff
-
-" handle package names in variables differently from the rest of the 
-" variable name 
-let perl_scope_want_variables = 1
-
-" syntax color complex things like @{${"foo"}}
-let perl_extended_vars = 1
-
-" Perl includes POD 
-let perl_include_pod = 1
-
-let perl_want_scope_in_variables = 1
-
-" Java-Stuff. 
-let java_highlight_all=1
-let java_highlight_functions="style"
-let java_allow_cpp_keywords=1
-
 " XML-Related
 let xml_use_xhtml = 1
 
@@ -259,7 +237,7 @@ let xml_use_xhtml = 1
 " " program to alway generate a file-name.
 set grepprg=grep\ -nH\ $*
 
-" Prevents Vim 7.0 from setting filetype to 'plaintex'
+" Prevents Vim 7 from setting filetype to 'plaintex'
 let g:tex_flavor='latex'
 
 
