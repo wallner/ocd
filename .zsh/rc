@@ -2,8 +2,8 @@
 # Florian Wallners zshrc
 
 function debug () {
-	if [[ -n $DEBUG ]] then
-			echo "DEBUG: $*"
+	if [ -n $DEBUG ]; then
+		echo "DEBUG: $*"
 	fi
 }
 
@@ -13,6 +13,16 @@ fi
 
 debug "Debug mode requested."
 debug "To disable remove the file .zsh/debug."
+
+if [[ `uname -s` == "Darwin" ]]; then
+    debug "Running on osx"
+    MACOS="true"
+fi
+if [ -d '/usr/local/opt/coreutils/libexec/gnubin' ]; then
+    debug "Using GNU coreutils by default and add manpath"
+    PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
+    export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
+fi
 
 if [ `id -u` -eq 0 ]; then
 	debug "We are running as root."
@@ -77,7 +87,7 @@ export LOGCHECK=60 # check all sixty seconds for login/logout activity
 export WATCHFMT="%n %a on %l from %M at %T"
 
 
-# The options. Here are only those listed that are changed from the defaults.
+# The options. Listed  here are only those that differ from the defaults.
 # They are ordered alphabetically not by subject.
 setopt ALWAYS_TO_END       # Move to end of word after completion
 setopt AUTO_CD             # If an unknown command is a directory cd into it.
@@ -263,7 +273,7 @@ fi
 
 SOURCE_FILES=(
     $HOME/.zsh/rc_$(hostname -f)
-    $HOME/.zsh/rc_$(dnsdomainname)
+#    $HOME/.zsh/rc_$(dnsdomainname)
     $HOME/.zsh/rc_local
 )
 
@@ -281,4 +291,5 @@ debug "Resetting all temporary variables."
 DEBUG=""
 system=""
 ROOT=""
+MACOS=""
 unfunction debug

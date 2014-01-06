@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/bin/bash
 
 IGNORE_RE="^\./(README$|\.git)"
 
@@ -13,21 +13,21 @@ for ocddir in $OCDDIRS; do
   fi
   cd $ocddir
 
-  files=$(find . -type f | egrep -v  "$IGNORE_RE")
-  dirs=$(find . -type d | egrep -v  "$IGNORE_RE")
+  files=$(find ./ -type f | egrep -v  "$IGNORE_RE")
+  dirs=$(find ./ -type d | egrep -v  "$IGNORE_RE")
 
   for dir in $dirs; do
     mkdir -p $HOME/$dir
   done
 
   for file in $files; do
-    echo -n .
+    echo -n '.'
     src="$file"
     dst="$HOME/$file"
     if [ -f $dst ]; then
       rm -f $dst
     fi
-    cp --preserve=mode $file $dst
+    cp -p $file $dst
   done
   echo
 done
