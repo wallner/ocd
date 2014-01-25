@@ -33,6 +33,8 @@ Bundle 'Shougo/neocomplcache.vim'
 Bundle 'Shougo/neosnippet'
 " Honza's snippets
 Bundle 'honza/vim-snippets'
+" vim module
+Bundle 'rodjek/vim-puppet'
 " use tagbar if ctags is available
 if executable('ctags')
     Bundle 'majutsushi/tagbar'
@@ -179,6 +181,7 @@ set noshowmode            " Get rid of default mode indicator
 if has('gui_running')
     set background=light
     set linespace=1
+    set guifont=Source\ Code\ Pro\ for\ Powerline:h12
 else
     set background=dark
 endif
