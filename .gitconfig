@@ -33,6 +33,8 @@
 	st = status -s
     rb = rebase
     fa = fetch --all
+    down = pull --rebase
+    onup = push
 [push]
 	default = tracking
 [giggle]
