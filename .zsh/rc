@@ -35,6 +35,11 @@ if [[ -n $MACOS ]]; then
     PATH="/usr/local/bin:$PATH"
 fi
 
+if [ -d /usr/local/share/zsh-completions ]; then
+    debug "Adding Homebrews completions"
+    fpath=(/usr/local/share/zsh-completions $fpath)
+fi
+
 if [ -d /usr/local/sw/grails ]; then
     debug "Prepending /usr/local/sw/grails to PATH"
     PATH=/usr/local/sw/grails/bin:$PATH
@@ -47,8 +52,7 @@ if [ -d ${HOME}/bin ]; then
 fi
 
 if which jenv > /dev/null; then
-    debug "Assing jenv to path"
-    PATH="$HOME/.jenv/bin:$PATH"
+    debug "Adding jenv support"
     eval "$(jenv init -)"
 fi
 
