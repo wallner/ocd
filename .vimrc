@@ -16,11 +16,14 @@ Bundle 'gmarik/vundle'
 Bundle 'altercation/vim-colors-solarized'
 " close opened parantheses and '"
 Bundle 'spf13/vim-autoclose'
-Bundle 'tpope/vim-surround'
 " make repetition work well with plugins
 Bundle 'tpope/vim-repeat'
-" proper vim integration
+" handle surroundings
+Bundle 'tpope/vim-surround'
+" proper git integration
 Bundle 'tpope/vim-fugitive'
+" use <c-a>/ <c-x> on dates
+Bundle 'tpope/vim-speeddating'
 " Fancier status line
 Bundle 'bling/vim-airline'
 " Fancy file management
@@ -31,8 +34,7 @@ Bundle 'mhinz/vim-signify'
 Bundle 'Shougo/neocomplcache.vim'
 " Snipets
 Bundle 'Shougo/neosnippet'
-" Honza's snippets
-Bundle 'honza/vim-snippets'
+Bundle 'Shougo/neosnippet-snippets'
 " vim module
 Bundle 'rodjek/vim-puppet'
 " use tagbar if ctags is available
@@ -45,7 +47,6 @@ if vundle_installed == 0
     echo ""
     :BundleInstall
 endif
-
 filetype plugin indent on " file type and plugin indention
 
 set nobackup              " Keep no backup file, use version control
@@ -84,8 +85,6 @@ set hlsearch              " highlight search
 let g:acp_enableAtStartup = 0
 " Use neocomplcache.
 let g:neocomplcache_enable_at_startup = 1
-" Use smartcase.
-let g:neocomplcache_enable_smart_case = 1
 " limit number of completions to 15
 let g:neocomplcache_max_list = 15
 " use smart case
@@ -99,11 +98,11 @@ let g:neocomplcache_enable_underbar_completion = 1
 if !exists('g:neocomplcache_keyword_patterns')
     let g:neocomplcache_keyword_patterns = {}
 endif
-let g:neocomplcache_keyword_patterns._ = '\h\w*'
+let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
 " Highlight first canidate
 let g:neocomplcache_enable_auto_select = 1
 " Don't have the window popup automatically
-let g:neocomplcache_disable_auto_complete = 1
+let g:neocomplcache_disable_auto_complete = 15
 inoremap <expr><C-l> neocomplcache#complete_common_string()
 " SuperTab like snippets behavior.
 imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
@@ -119,6 +118,8 @@ autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
 if !exists('g:neocomplete#sources#omni#input_patterns')
     let g:neocomplete#sources#omni#input_patterns = {}
 endif
+
+
 
 " Cache completion on ctrl-space in insert mode
 function! Auto_complete_string()
@@ -181,10 +182,11 @@ set noshowmode            " Get rid of default mode indicator
 if has('gui_running')
     set background=light
     set linespace=1
-    set guifont=Source\ Code\ Pro\ for\ Powerline:h12
+    set guifont=Source\ Code\ Pro\ 12
 else
     set background=dark
 endif
+
 
 
 if filereadable(expand('~/.vim/bundle/vim-colors-solarized/colors/solarized.vim'))
@@ -200,6 +202,10 @@ endif
 
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
+if !exists('g:airline_symbols')
+      let g:airline_symbols = {}
+endif
+let g:airline_symbols.space = "\ua0"
 
 " Window management
 " split window vertically with <leader> v
@@ -219,7 +225,7 @@ if has("autocmd")
     au FileType make set noexpandtab
 
     " In text files, always limit the width of text to 79 characters
-    au BufNewFile,BufRead *.txt set tw=79
+    au BufNewFile,BufRead *.txt,*markdown,*md,*asciidoc set tw=78
 
 endif " has("autocmd")
 
