@@ -51,8 +51,9 @@ if [ -d ${HOME}/bin ]; then
     PATH=${HOME}/bin:$PATH
 fi
 
-if which jenv > /dev/null; then
-    debug "Adding jenv support"
+if which jenv &> /dev/null; then
+    debug "Assing jenv to path"
+    PATH="$HOME/.jenv/bin:$PATH"
     eval "$(jenv init -)"
 fi
 
