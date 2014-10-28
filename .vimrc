@@ -182,7 +182,7 @@ set noshowmode            " Get rid of default mode indicator
 if has('gui_running')
     set background=light
     set linespace=1
-    set guifont=Source\ Code\ Pro\ 12
+    set guifont=Source\ Code\ Pro\ for\ Powerline:h12
 else
     set background=dark
 endif
