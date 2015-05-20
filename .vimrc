@@ -224,7 +224,7 @@ if has("autocmd")
     " Makefiles have real Tabs
     au FileType make set noexpandtab
 
-    " In text files, always limit the width of text to 79 characters
+    " In text files, always limit the width of text to 78 characters
     au BufNewFile,BufRead *.txt,*markdown,*md,*asciidoc set tw=78
 
 endif " has("autocmd")
