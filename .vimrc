@@ -35,6 +35,7 @@ Bundle 'Shougo/neocomplcache.vim'
 " Snipets
 Bundle 'Shougo/neosnippet'
 Bundle 'Shougo/neosnippet-snippets'
+Bundle 'fatih/vim-go'
 " vim module
 Bundle 'rodjek/vim-puppet'
 " use tagbar if ctags is available
@@ -169,6 +170,10 @@ let g:signify_update_on_bufenter = 1
 let g:signify_update_on_focusgained = 1
 let g:signify_cursorhold_normal = 2000
 
+" Vim-go configuration
+  let g:go_snippet_engine = "neosnippet"
+  inoremap <Nul> <C-x><C-o>
+
 " User Interface
 syntax enable             " Syntax highlight on.
 set cursorline            " Highlight the line the cursor's in
@@ -182,7 +187,6 @@ set noshowmode            " Get rid of default mode indicator
 if has('gui_running')
     set background=light
     set linespace=1
-    set guifont=Source\ Code\ Pro\ for\ Powerline:h12
 else
     set background=dark
 endif
@@ -226,6 +230,8 @@ if has("autocmd")
 
     " In text files, always limit the width of text to 78 characters
     au BufNewFile,BufRead *.txt,*markdown,*md,*asciidoc set tw=78
+
+    au BufNewFile,BufRead *.go set ft=go
 
 endif " has("autocmd")
 

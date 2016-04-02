@@ -35,28 +35,24 @@ if [[ -n $MACOS ]]; then
     PATH="/usr/local/bin:$PATH"
 fi
 
-if [ -d /usr/local/share/zsh-completions ]; then
-    debug "Adding Homebrews completions"
-    fpath=(/usr/local/share/zsh-completions $fpath)
-fi
-
-fpath=(~/.zsh/completion $fpath)
 
 if [ -d /usr/local/sw/grails ]; then
     debug "Prepending /usr/local/sw/grails to PATH"
     PATH=/usr/local/sw/grails/bin:$PATH
 fi
 
-# Make sure we've got hub in the path!
+# Make sure we've got ack in the path!
 if [ -d ${HOME}/bin ]; then
     debug "Prepending ~/bin to PATH"
     PATH=${HOME}/bin:$PATH
 fi
 
-if [ -s ${HOME}/perl5/perlbrew/etc/bashrc ]; then  
+if [ -s ${HOME}/perl5/perlbrew/etc/bashrc ]; then
     debug "Adding perlbrew suport"
     source ~/perl5/perlbrew/etc/bashrc
 fi
+
+[[ -s "/home/wallner/.gvm/bin/gvm-init.sh" ]] && source "/home/wallner/.gvm/bin/gvm-init.sh"
 
 if [ -s ${HOME}/.rvm/scripts/rvm ]; then
     debug "Adding RVM support"
@@ -68,7 +64,7 @@ fi
 # umask to be more restrictive than the umask applied with super user
 # priveleges. You can fix it in '/etc/sudoers' but I am not sure wether I want
 # to do that on all systems.
-# 
+#
 # if [ -z $ROOT ]; then
 #  I want my umask tight and tidy
 #    debug "setting umask to 027"
@@ -77,17 +73,17 @@ fi
 #    debug "setting umask to 022"
 #    umask 022
 # fi
-# the last 4096 commands entered are kept in the HISTORY and written  
+# the last 4096 commands entered are kept in the HISTORY and written
 # to  "$HOME/.zsh/history" after loggout.
 
-export HISTSIZE=4096	
+export HISTSIZE=4096
 export SAVEHIST=4096
 export HISTFILE=$HOME/.zsh/history
 
 # Informs us about who loggs in or out on our system. If the file
-# '~/.zsh/users' exists only the activity of the users in there 
+# '~/.zsh/users' exists only the activity of the users in there
 # is monitored, all users otherwise.
- 
+
 if [ -f $HOME/.zsh/users ]; then
    watch=( $(<$HOME/.zsh/users) )
    debug "Watching only the people in $HOME/.zsh/users"
@@ -122,10 +118,10 @@ setopt PUSHD_TO_HOME       # empty pushd pushes '~' onto stack
 if [[ -x /usr/bin/vim || -x /usr/local/bin/vim ]] then
 	debug "Found VIm, setting \$EDITOR to it."
 	export EDITOR=vim
-else 
-    # I catch myself very often typing 'vim' 'though I know its not 
+else
+    # I catch myself very often typing 'vim' 'though I know its not
     # there... So I help myself.
-    
+
 	export EDITOR=vi
 	debug "Setting \$EDITOR to $EDITOR and setting up vim alias."
 	alias vim='vi'
@@ -149,7 +145,7 @@ DIRCOLORSCHEMA=`cat ${DIRCOLORPATH}/schema`
 debug "Using solarized schema: ${DIRCOLORSCHEMA}"
 eval `dircolors ${DIRCOLORPATH}/dircolors.ansi-${DIRCOLORSCHEMA}`
 
-# Set up less 
+# Set up less
 export PAGER=less	       # just in case we are on solaris
 export LESS="-deFgiMRSX -P?fFile %f:stdin. ?m(%i of %m) :.line %l ?Lof %L:.?p (%p\%):."
 export LESSCHARSET=utf-8   # Damit less Umlaute als solche anzeigt
@@ -169,13 +165,13 @@ fi
 export LC_COLLATE="C"
 export LC_CTYPE=en_US.UTF-8
 export LANG=en_US.UTF-8
-			
+
 # Set up aliases
 alias mv='nocorrect mv'    # no spelling correction on mv
 alias cp='nocorrect cp'    # no spelling correction on cp
 alias mkdir='nocorrect mkdir' # no spelling correction on mkdir
 alias ll='ls -l'
-alias la='ls -a' 
+alias la='ls -a'
 alias cd..="cd .."
 alias \#='sudo'
 alias todo='todo.pl'
@@ -185,7 +181,7 @@ alias tmux="TERM=screen-256color tmux"
 
 # Colorful ls
 
-if [ "$TERM" != "dumb" ]; then 
+if [ "$TERM" != "dumb" ]; then
 #    eval "`dircolors -b`" not needed
     alias ls='ls --color=auto'
 fi
@@ -208,9 +204,25 @@ if [[ -x /sbin/ifup && -z $ROOT ]] then
 	debug "Setting up ifup alias."
 fi
 
+if [ $(which hub 2> /dev/null) ]; then
+    alias git='hub'
+    debug "Setting up git alias"
+fi
+
 # Completition control
+
+if [ -d /usr/local/share/zsh-completions ]; then
+    debug "Adding Homebrews completions"
+    fpath=(/usr/local/share/zsh-completions $fpath)
+fi
+
+if [ -d "${HOME}/.zsh/completion" ]; then
+    debug "Adding local completions"
+    fpath=(${HOME}/.zsh/completion/ $fpath)
+fi
+
 autoload -U compinit
-compinit 
+compinit
 
 # Completion caching
 zstyle ':completion::complete:*' use-cache 1
@@ -256,20 +268,20 @@ zstyle ':completion:*:options' description 'yes'
 zstyle ':completion:*:options' auto-description '%d'
 
 # Magic with Window-Titles
- 
+
 case $TERM in
 	xterm*|dtterm)
-		precmd ()  {print -Pn "\e]0;%n@%m: %~\a"} 
-        preexec () {print -Pn "\e]0;%n@%m: [$1]\a"} 
+		precmd ()  {print -Pn "\e]0;%n@%m: %~\a"}
+        preexec () {print -Pn "\e]0;%n@%m: [$1]\a"}
 	;;
     screen*)
         precmd()  {print -Pn "\ek %n@%m: %~\e\\"}
         preexec() {print -Pn "\ek %n@%m: [$1]\e\\"}
 	;;
-esac                  
+esac
 
 bindkey -e                  # emacs key bindings
-bindkey ' ' magic-space     # also do history expansion on space 
+bindkey ' ' magic-space     # also do history expansion on space
 bindkey "\e[3~" delete-char # make delete work correctly
 
 
