@@ -244,6 +244,8 @@ map <F6> :set nonumber<CR>   " Turn off linenumbers.
 " displayed.
 :noremap <silent> <Space> :silent noh<Bar>echo<CR>
 
+autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
+
 " XML-Related
 let xml_use_xhtml = 1
 

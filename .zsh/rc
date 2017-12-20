@@ -2,54 +2,26 @@
 # Florian Wallners zshrc
 
 function debug () {
-	if [[ -n $DEBUG ]]; then
-		echo "DEBUG: $*"
-	fi
+    if [[ -n $DEBUG ]]; then
+        echo "DEBUG: $*"
+    fi
 }
 
 if [ -f $HOME/.zsh/debug ]; then
-	DEBUG="true"
+    DEBUG="true"
 fi
 
 debug "Debug mode requested."
 debug "To disable remove the file .zsh/debug."
 
-if [[ `uname -s` == "Darwin" ]]; then
-    debug "Running on osx"
-    MACOS="true"
-fi
-
-if [ -d '/usr/local/opt/coreutils/libexec/gnubin' ]; then
-    debug "Using GNU coreutils by default and add manpath"
-    PATH="/usr/local/opt/coreutils/libexec/gnubin:$PATH"
-    export MANPATH="/usr/local/opt/coreutils/libexec/gnuman:$MANPATH"
-fi
-
 if [ `id -u` -eq 0 ]; then
-	debug "We are running as root."
-	ROOT='true'
+    debug "We are running as root."
+    ROOT='true'
 fi
 
-if [[ -n $MACOS ]]; then
-    debug "Prepending /usr/local/bin to $PATH"
-    PATH="/usr/local/bin:$PATH"
-fi
-
-
-if [ -d /usr/local/sw/grails ]; then
-    debug "Prepending /usr/local/sw/grails to PATH"
-    PATH=/usr/local/sw/grails/bin:$PATH
-fi
-
-# Make sure we've got ack in the path!
 if [ -d ${HOME}/bin ]; then
     debug "Prepending ~/bin to PATH"
     PATH=${HOME}/bin:$PATH
-fi
-
-if [ -s ${HOME}/perl5/perlbrew/etc/bashrc ]; then
-    debug "Adding perlbrew suport"
-    source ~/perl5/perlbrew/etc/bashrc
 fi
 
 [[ -s "/home/wallner/.gvm/bin/gvm-init.sh" ]] && source "/home/wallner/.gvm/bin/gvm-init.sh"
@@ -60,22 +32,6 @@ if [ -s ${HOME}/.rvm/scripts/rvm ]; then
     PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
 fi
 
-# Disabled for the time being. Per default sudo doesn't permit for the users
-# umask to be more restrictive than the umask applied with super user
-# priveleges. You can fix it in '/etc/sudoers' but I am not sure wether I want
-# to do that on all systems.
-#
-# if [ -z $ROOT ]; then
-#  I want my umask tight and tidy
-#    debug "setting umask to 027"
-#    umask 027
-# else
-#    debug "setting umask to 022"
-#    umask 022
-# fi
-# the last 4096 commands entered are kept in the HISTORY and written
-# to  "$HOME/.zsh/history" after loggout.
-
 export HISTSIZE=4096
 export SAVEHIST=4096
 export HISTFILE=$HOME/.zsh/history
@@ -85,11 +41,11 @@ export HISTFILE=$HOME/.zsh/history
 # is monitored, all users otherwise.
 
 if [ -f $HOME/.zsh/users ]; then
-   watch=( $(<$HOME/.zsh/users) )
-   debug "Watching only the people in $HOME/.zsh/users"
+    watch=( $(<$HOME/.zsh/users) )
+    debug "Watching only the people in $HOME/.zsh/users"
 else
-   watch=(notme)
-   debug "Watching all users but me."
+    watch=(notme)
+    debug "Watching all users but me."
 fi
 
 export LOGCHECK=60 # check all sixty seconds for login/logout activity
@@ -116,28 +72,36 @@ setopt PUSHD_TO_HOME       # empty pushd pushes '~' onto stack
 # trying to setup the editor correctly
 
 if [[ -x /usr/bin/vim || -x /usr/local/bin/vim ]] then
-	debug "Found VIm, setting \$EDITOR to it."
-	export EDITOR=vim
+    debug "Found VIm, setting \$EDITOR to it."
+    export EDITOR=vim
 else
     # I catch myself very often typing 'vim' 'though I know its not
     # there... So I help myself.
 
-	export EDITOR=vi
-	debug "Setting \$EDITOR to $EDITOR and setting up vim alias."
-	alias vim='vi'
+    export EDITOR=vi
+    debug "Setting \$EDITOR to $EDITOR and setting up vim alias."
+    alias vim='vi'
 fi
-
-# Some environment variables:
-# the following are available under Linux.
-# export USER=`id -un`
-# export LOGNAME=$USER
-# export HOSTNAME=`/bin/hostname`
 
 # The prompt. Make sure colors are loaded
 
 autoload -U colors && colors
-RPROMPT="%~"               # display cwd at right side
-PROMPT="%{$fg[yellow]%}%T%{$reset_color%} %n@%m%# " # "Time name@hostname% "
+
+if [ -f `which powerline-daemon` ]; then
+    powerline-daemon -q
+    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(status time vcs context)
+    POWERLEVEL9K_MODE='awesome-fontconfig'
+    POWERLEVEL9K_CONTEXT_DEFAULT_BACKGROUND='none'
+    POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(dir)
+    POWERLEVEL9K_STATUS_VERBOSE=false
+    POWERLEVEL9K_SHORTEN_STRATEGY="truncate_middle"
+    POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
+    DEFAULT_USER='wallner'
+    . $HOME/.zsh/powerlevel9k/powerlevel9k.zsh-theme
+else
+    RPROMPT="%~"               # display cwd at right side
+    PROMPT="%{$fg[yellow]%}%T%{$reset_color%} %n@%m%# " # "Time name@hostname% "
+fi
 
 # load the right colorschema. We are using solarized here
 DIRCOLORPATH="${HOME}/.zsh/dircolors"
@@ -148,7 +112,7 @@ eval `dircolors ${DIRCOLORPATH}/dircolors.ansi-${DIRCOLORSCHEMA}`
 # Set up less
 export PAGER=less	       # just in case we are on solaris
 export LESS="-deFgiMRSX -P?fFile %f:stdin. ?m(%i of %m) :.line %l ?Lof %L:.?p (%p\%):."
-export LESSCHARSET=utf-8   # Damit less Umlaute als solche anzeigt
+export LESSCHARSET=utf-8   # Is this still necessary?
 # Format man pages for a wigth of 80 col no matter how wide the terminal
 export MANWIDTH=80
 
@@ -190,18 +154,18 @@ fi
 # usual path, unless for root that is.
 
 if [[ -x /usr/sbin/traceroute && -z "$ROOT" ]] then
-	alias traceroute='/usr/sbin/traceroute'
-	debug "Setting up traceroute alias."
+    alias traceroute='/usr/sbin/traceroute'
+    debug "Setting up traceroute alias."
 fi
 
 if [[ -x /sbin/fuser && -z $ROOT ]] then
-	alias fuser='/sbin/fuser'
-	debug "Setting up fuser alias."
+    alias fuser='/sbin/fuser'
+    debug "Setting up fuser alias."
 fi
 
 if [[ -x /sbin/ifup && -z $ROOT ]] then
-	alias ifup='/sbin/ifup'
-	debug "Setting up ifup alias."
+    alias ifup='/sbin/ifup'
+    debug "Setting up ifup alias."
 fi
 
 if [ $(which hub 2> /dev/null) ]; then
@@ -254,7 +218,7 @@ zstyle ':completion:*:hosts' hosts $hostnames
 if [ -f $HOME/.zsh/accounts ]; then
     accounts=( $(<$HOME/.zsh/accounts) )
     zstyle ':completion:*:complete:ssh:*' users $accounts
-	zstyle ':completion:*:complete:scp:*' users $accounts
+    zstyle ':completion:*:complete:scp:*' users $accounts
 fi
 
 # Don't complete backup files as executables
@@ -270,26 +234,24 @@ zstyle ':completion:*:options' auto-description '%d'
 # Magic with Window-Titles
 
 case $TERM in
-	xterm*|dtterm)
-		precmd ()  {print -Pn "\e]0;%n@%m: %~\a"}
+    xterm*|dtterm)
+        precmd ()  {print -Pn "\e]0;%n@%m: %~\a"}
         preexec () {print -Pn "\e]0;%n@%m: [$1]\a"}
-	;;
+    ;;
     screen*)
         precmd()  {print -Pn "\ek %n@%m: %~\e\\"}
         preexec() {print -Pn "\ek %n@%m: [$1]\e\\"}
-	;;
+    ;;
 esac
 
 bindkey -e                  # emacs key bindings
 bindkey ' ' magic-space     # also do history expansion on space
 bindkey "\e[3~" delete-char # make delete work correctly
 
-
-# Oh dear! We're done.
-
+eval "$(direnv hook zsh)"
 
 if [ -x /usr/games/fortune ]; then
-	# One last thing ;-)
+    # One last thing ;-)
     /usr/games/fortune
 elif [ -x /sw/bin/fortune ]; then
     /sw/bin/fortune
