@@ -175,15 +175,11 @@ fi
 
 # Completition control
 
-if [ -d /usr/local/share/zsh-completions ]; then
-    debug "Adding Homebrews completions"
-    fpath=(/usr/local/share/zsh-completions $fpath)
-fi
-
 if [ -d "${HOME}/.zsh/completion" ]; then
     debug "Adding local completions"
     fpath=(${HOME}/.zsh/completion/ $fpath)
 fi
+
 
 autoload -U compinit
 compinit
@@ -230,6 +226,11 @@ zstyle ':completion:*:matches' group 'yes'
 # Describe options in full
 zstyle ':completion:*:options' description 'yes'
 zstyle ':completion:*:options' auto-description '%d'
+
+if [ $(which kubectl 2> /dev/null) ]; then
+    debug "Setting up kubctl completion"
+    source <(kubectl completion zsh)
+fi
 
 # Magic with Window-Titles
 
