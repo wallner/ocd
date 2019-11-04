@@ -1,116 +1,75 @@
 # vim: filetype=zsh
 # Florian Wallners zshrc
 
-function debug () {
-    if [[ -n $DEBUG ]]; then
-        echo "DEBUG: $*"
-    fi
-}
-
-if [ -f $HOME/.zsh/debug ]; then
-    DEBUG="true"
-fi
-
-debug "Debug mode requested."
-debug "To disable remove the file .zsh/debug."
-
 if [ `id -u` -eq 0 ]; then
-    debug "We are running as root."
     ROOT='true'
 fi
 
 if [ -d ${HOME}/bin ]; then
-    debug "Prepending ~/bin to PATH"
     PATH=${HOME}/bin:$PATH
 fi
 
-[[ -s "/home/wallner/.gvm/bin/gvm-init.sh" ]] && source "/home/wallner/.gvm/bin/gvm-init.sh"
+# initialize antibody
+source <(antibody init)
 
-if [ -s ${HOME}/.rvm/scripts/rvm ]; then
-    debug "Adding RVM support"
-    source ${HOME}/.rvm/scripts/rvm
-    PATH=$PATH:$HOME/.rvm/bin # Add RVM to PATH for scripting
-fi
-
-export HISTSIZE=4096
+export HISTSIZE=6144
 export SAVEHIST=4096
 export HISTFILE=$HOME/.zsh/history
 
-# Informs us about who loggs in or out on our system. If the file
-# '~/.zsh/users' exists only the activity of the users in there
-# is monitored, all users otherwise.
-
-if [ -f $HOME/.zsh/users ]; then
-    watch=( $(<$HOME/.zsh/users) )
-    debug "Watching only the people in $HOME/.zsh/users"
-else
-    watch=(notme)
-    debug "Watching all users but me."
-fi
-
-export LOGCHECK=60 # check all sixty seconds for login/logout activity
-export WATCHFMT="%n %a on %l from %M at %T"
-
-
 # The options. Listed  here are only those that differ from the defaults.
 # They are ordered alphabetically not by subject.
-setopt ALWAYS_TO_END       # Move to end of word after completion
-setopt AUTO_CD             # If an unknown command is a directory cd into it.
-setopt BRACE_CCL           # Expand expressions in braces
-setopt COMPLETE_IN_WORD    # Don't move to end of word when completeing.
-setopt CORRECT             # Try auto correction of commands
-setopt EQUALS              # Filename expansion on right hand side of '='
-setopt HIST_IGNORE_ALLDUPS # Remove all duplicates from the history
-setopt HIST_NOSTORE        # Don't store history in the history
-setopt HIST_REDUCE_BLANKS  # Remove all superflous blanks from history entries
-setopt LONG_LIST_JOBS      # Display jobs in long list formats
-setopt MARK_DIRS           # Mark a generated filename as directory '/'
-setopt NUMERIC_GLOBSORT    # Sort generated numerical file names numerical
-setopt PUSHD_TO_HOME       # empty pushd pushes '~' onto stack
+setopt ALWAYS_TO_END        # Move to end of word after completion
+setopt AUTO_CD              # If an unknown command is a directory cd into it.
+setopt BRACE_CCL            # Expand expressions in braces
+setopt COMPLETE_IN_WORD     # Don't move to end of word when completeing.
+setopt CORRECT              # Try auto correction of commands
+setopt EQUALS               # Filename expansion on right hand side of '='
+setopt HIST_IGNORE_ALL_DUPS # Remove all duplicates from the history
+setopt HIST_NO_STORE        # Don't store history in the history
+setopt HIST_REDUCE_BLANKS   # Remove all superflous blanks from history entries
+setopt SHARE_HISTORY        # History is shared between shells.
+setopt LONG_LIST_JOBS       # Display jobs in long list formats
+setopt MARK_DIRS            # Mark a generated filename as directory '/'
+setopt NUMERIC_GLOB_SORT    # Sort generated numerical file names numerical
+setopt PUSHD_TO_HOME        # empty pushd pushes '~' onto stack
 
 
 # trying to setup the editor correctly
 
 if [[ -x /usr/bin/vim || -x /usr/local/bin/vim ]] then
-    debug "Found VIm, setting \$EDITOR to it."
     export EDITOR=vim
 else
     # I catch myself very often typing 'vim' 'though I know its not
     # there... So I help myself.
 
     export EDITOR=vi
-    debug "Setting \$EDITOR to $EDITOR and setting up vim alias."
     alias vim='vi'
 fi
 
 # The prompt. Make sure colors are loaded
 
 autoload -U colors && colors
-
-if [ -f `which powerline-daemon` ]; then
+if [ -x `which powerline-daemon` ]; then
     powerline-daemon -q
-    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(status time vcs context)
+    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(status time vcs context)                                           
+    POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(dir)
     POWERLEVEL9K_MODE='awesome-fontconfig'
     POWERLEVEL9K_CONTEXT_DEFAULT_BACKGROUND='none'
-    POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(dir)
     POWERLEVEL9K_STATUS_VERBOSE=false
     POWERLEVEL9K_SHORTEN_STRATEGY="truncate_middle"
     POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
     DEFAULT_USER='wallner'
-    . $HOME/.zsh/powerlevel9k/powerlevel9k.zsh-theme
 else
     RPROMPT="%~"               # display cwd at right side
     PROMPT="%{$fg[yellow]%}%T%{$reset_color%} %n@%m%# " # "Time name@hostname% "
 fi
 
-# load the right colorschema. We are using solarized here
-DIRCOLORPATH="${HOME}/.zsh/dircolors"
-DIRCOLORSCHEMA=`cat ${DIRCOLORPATH}/schema`
-debug "Using solarized schema: ${DIRCOLORSCHEMA}"
-eval `dircolors ${DIRCOLORPATH}/dircolors.ansi-${DIRCOLORSCHEMA}`
+export _ZSH_DIRCOLORS_SOLARIZED_CONF=${HOME}/.zsh/.zsh_dircolors.config
+
+antibody bundle < ~/.zsh/antigen_plugins.txt
 
 # Set up less
-export PAGER=less	       # just in case we are on solaris
+export PAGER=less
 export LESS="-deFgiMRSX -P?fFile %f:stdin. ?m(%i of %m) :.line %l ?Lof %L:.?p (%p\%):."
 export LESSCHARSET=utf-8   # Is this still necessary?
 # Format man pages for a wigth of 80 col no matter how wide the terminal
@@ -122,8 +81,6 @@ if [ -f /usr/share/source-highlight/src-hilite-lesspipe.sh ]; then
 elif [ -f /usr/bin/src-hilite-lesspipe.sh ]; then
     LESSOPEN="| /usr/bin/src-hilite-lesspipe.sh %s"
 fi
-
-
 
 # Don't ignore leading dots when sorting.
 export LC_COLLATE="C"
@@ -138,48 +95,31 @@ alias ll='ls -l'
 alias la='ls -a'
 alias cd..="cd .."
 alias \#='sudo'
-alias todo='todo.pl'
 alias doch='sudo $(fc -ln -1)'
 alias xps='ps aucx | head -1; ps aucx | grep -i '
-alias tmux="TERM=screen-256color tmux"
-
-# Colorful ls
-
-if [ "$TERM" != "dumb" ]; then
-#    eval "`dircolors -b`" not needed
-    alias ls='ls --color=auto'
-fi
+alias tmux='TERM=screen-256color tmux'
+alias https='http --default-scheme=https'
 
 # Generate some aliases for programs that are not in the
 # usual path, unless for root that is.
 
 if [[ -x /usr/sbin/traceroute && -z "$ROOT" ]] then
     alias traceroute='/usr/sbin/traceroute'
-    debug "Setting up traceroute alias."
 fi
 
 if [[ -x /sbin/fuser && -z $ROOT ]] then
     alias fuser='/sbin/fuser'
-    debug "Setting up fuser alias."
-fi
-
-if [[ -x /sbin/ifup && -z $ROOT ]] then
-    alias ifup='/sbin/ifup'
-    debug "Setting up ifup alias."
 fi
 
 if [ $(which hub 2> /dev/null) ]; then
     alias git='hub'
-    debug "Setting up git alias"
 fi
 
 # Completition control
 
 if [ -d "${HOME}/.zsh/completion" ]; then
-    debug "Adding local completions"
     fpath=(${HOME}/.zsh/completion/ $fpath)
 fi
-
 
 autoload -U compinit
 compinit
@@ -228,8 +168,19 @@ zstyle ':completion:*:options' description 'yes'
 zstyle ':completion:*:options' auto-description '%d'
 
 if [ $(which kubectl 2> /dev/null) ]; then
-    debug "Setting up kubctl completion"
     source <(kubectl completion zsh)
+fi
+
+if [ $(which minikube 2> /dev/null) ]; then
+    source <(minikube completion zsh)
+fi
+
+if [ $(which helm 2> /dev/null ) ]; then
+    source <(helm completion zsh)
+fi
+
+if [ -f /usr/lib64/google-cloud-sdk/completion.zsh.inc ]; then
+    source "/usr/lib64/google-cloud-sdk/completion.zsh.inc"
 fi
 
 # Magic with Window-Titles
@@ -251,34 +202,20 @@ bindkey "\e[3~" delete-char # make delete work correctly
 
 eval "$(direnv hook zsh)"
 
-if [ -x /usr/games/fortune ]; then
-    # One last thing ;-)
-    /usr/games/fortune
-elif [ -x /sw/bin/fortune ]; then
-    /sw/bin/fortune
-elif [ -x /opt/local/bin/fortune ]; then
-    /opt/local/bin/fortune
-fi
-
 SOURCE_FILES=(
     $HOME/.zsh/rc_$(hostname -f)
-#    $HOME/.zsh/rc_$(dnsdomainname)
     $HOME/.zsh/rc_local
 )
 
 for file in ${SOURCE_FILES[@]}; do
-    debug "Checking for file: $file"
     if [ -f $file ]; then
-        debug "Sourcing $file"
         source $file
     fi
 done
-debug "Removing duplicate entries from \$PATH"
+# Removing duplicate entries from $PATH
 typeset -U PATH
-debug "Resetting all temporary variables."
 
 DEBUG=""
 system=""
 ROOT=""
 MACOS=""
-unfunction debug
