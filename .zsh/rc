@@ -16,6 +16,11 @@ export HISTSIZE=6144
 export SAVEHIST=4096
 export HISTFILE=$HOME/.zsh/history
 
+# keybindgs
+bindkey -e                  # emacs key bindings
+bindkey ' ' magic-space     # also do history expansion on space
+bindkey "\e[3~" delete-char # make delete work correctly
+
 # The options. Listed  here are only those that differ from the defaults.
 # They are ordered alphabetically not by subject.
 setopt ALWAYS_TO_END        # Move to end of word after completion
@@ -46,12 +51,13 @@ else
     alias vim='vi'
 fi
 
+
 # The prompt. Make sure colors are loaded
 
 autoload -U colors && colors
 if [ -x `which powerline-daemon` ]; then
     powerline-daemon -q
-    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(status time vcs context)                                           
+    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(status time vcs context)
     POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(dir)
     POWERLEVEL9K_MODE='awesome-fontconfig'
     POWERLEVEL9K_CONTEXT_DEFAULT_BACKGROUND='none'
@@ -68,19 +74,31 @@ export _ZSH_DIRCOLORS_SOLARIZED_CONF=${HOME}/.zsh/.zsh_dircolors.config
 
 antibody bundle < ~/.zsh/antigen_plugins.txt
 
+# enable fzf
+if [[ -v TMUX ]]; then
+    export FZF_TMUX=1
+fi
+export FZF_DEFAULT_COMMAND='fd --type f'
+source /usr/share/fzf/shell/key-bindings.zsh
+# this is a bug in the fedora shipped fzf RPM
+source /usr/share/zsh/site-functions/fzf
+
 # Set up less
 export PAGER=less
-export LESS="-deFgiMRSX -P?fFile %f:stdin. ?m(%i of %m) :.line %l ?Lof %L:.?p (%p\%):."
+export LESS='-deFgiMRSX -P?fFile %f:stdin. ?m(%i of %m) :.line %l ?Lof %L:.?p (%p\%):.'
 export LESSCHARSET=utf-8   # Is this still necessary?
 # Format man pages for a wigth of 80 col no matter how wide the terminal
 export MANWIDTH=80
+# Use bat as manual pager
+export MANPAGER="sh -c 'col -bx | bat -l man -p'"
+export MANROFFOPT="-c"
 
+# In the process of switching to bat, but for the time beiing...
 if [ -f /usr/share/source-highlight/src-hilite-lesspipe.sh ]; then
-    # Debian / Ubuntu
-    LESSOPEN="| /usr/share/source-highlight/src-hilite-lesspipe.sh %s"
-elif [ -f /usr/bin/src-hilite-lesspipe.sh ]; then
     LESSOPEN="| /usr/bin/src-hilite-lesspipe.sh %s"
 fi
+
+export BAT_THEME="TwoDark"
 
 # Don't ignore leading dots when sorting.
 export LC_COLLATE="C"
@@ -145,12 +163,6 @@ zstyle ':completion:*' menu select
 # offer indexes before parameters in subscripts
 zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
 
-
-local hostnames
-hostnames=( ${${${${(f)"$(<$HOME/.ssh/known_hosts)"}:#[0-9]*}%%\ *}%%,*} )
-
-zstyle ':completion:*:hosts' hosts $hostnames
-
 if [ -f $HOME/.zsh/accounts ]; then
     accounts=( $(<$HOME/.zsh/accounts) )
     zstyle ':completion:*:complete:ssh:*' users $accounts
@@ -196,16 +208,7 @@ case $TERM in
     ;;
 esac
 
-bindkey -e                  # emacs key bindings
-bindkey ' ' magic-space     # also do history expansion on space
-bindkey "\e[3~" delete-char # make delete work correctly
-
 eval "$(direnv hook zsh)"
-
-SOURCE_FILES=(
-    $HOME/.zsh/rc_$(hostname -f)
-    $HOME/.zsh/rc_local
-)
 
 for file in ${SOURCE_FILES[@]}; do
     if [ -f $file ]; then
@@ -215,7 +218,6 @@ done
 # Removing duplicate entries from $PATH
 typeset -U PATH
 
-DEBUG=""
 system=""
 ROOT=""
 MACOS=""

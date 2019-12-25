@@ -1,151 +1,85 @@
-set nocompatible          " Use Vim defaults
-" Setting up Vundle - the vim plugin bundler
-let vundle_installed=1
-let vundle_readme=expand('~/.vim/bundle/vundle/README.md')
-if !filereadable(vundle_readme)
-    echo "Installing Vundle.."
-    echo ""
-    silent !mkdir -p ~/.vim/bundle
-    silent !git clone https://github.com/gmarik/vundle ~/.vim/bundle/vundle
-    let vundle_installed=0
+set nocompatible           " Use Vim defaults
+
+" Some initial preparation
+if empty(glob('~/.vim/autoload/plug.vim'))
+  silent !curl -fLo ~/.vim/autoload/plug.vim --create-dirs
+    \ https://raw.githubusercontent.com/junegunn/vim-plug/master/plug.vim
+  autocmd VimEnter * PlugInstall --sync | source $MYVIMRC
 endif
-set rtp+=~/.vim/bundle/vundle/
-call vundle#rc()
-Bundle 'gmarik/vundle'
+
+
+call plug#begin('~/.vim/plugged')
 " colorscheme of choice
-Bundle 'altercation/vim-colors-solarized'
-" close opened parantheses and '"
-Bundle 'spf13/vim-autoclose'
-" make repetition work well with plugins
-Bundle 'tpope/vim-repeat'
-" handle surroundings
-Bundle 'tpope/vim-surround'
-" proper git integration
-Bundle 'tpope/vim-fugitive'
-" use <c-a>/ <c-x> on dates
-Bundle 'tpope/vim-speeddating'
-" Fancier status line
-Bundle 'bling/vim-airline'
-" Fancy file management
-Bundle 'kien/ctrlp.vim'
-" Visualization of modified files for git and svn (better than gitgutter)
-Bundle 'mhinz/vim-signify'
-" Completion on steroids
-Bundle 'Shougo/neocomplcache.vim'
-" Snipets
-Bundle 'Shougo/neosnippet'
-Bundle 'Shougo/neosnippet-snippets'
-Bundle 'fatih/vim-go'
-" vim module
-Bundle 'rodjek/vim-puppet'
-" use tagbar if ctags is available
-if executable('ctags')
-    Bundle 'majutsushi/tagbar'
+Plug 'altercation/vim-colors-solarized'
+Plug 'spf13/vim-autoclose'     " close opened parantheses and '\"
+Plug 'tpope/vim-repeat'        " make repetition work well with plugins
+Plug 'tpope/vim-surround'      " handle surroundings
+Plug 'tpope/vim-fugitive'      " proper git integration
+Plug 'tpope/vim-speeddating'   " use <c-a>/<c-x> on dates
+Plug 'bling/vim-airline'       " Fancy status line
+Plug 'mhinz/vim-signify'       " Visualization of modified files for vcs
+Plug 'fatih/vim-go'            " Go development
+Plug 'junegunn/fzf.vim'        " use fzf for file management
+if executable('ctags')         " use tagbar if ctags is available
+   Plug 'majutsushi/tagbar'
 endif
 
-if vundle_installed == 0
-    echo "Installing Bundles, please ignore key map error messages"
-    echo ""
-    :BundleInstall
+if has('nvim')
+  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
+else
+  Plug 'Shougo/deoplete.nvim'
+  Plug 'roxma/nvim-yarp'
+  Plug 'roxma/vim-hug-neovim-rpc'
 endif
-filetype plugin indent on " file type and plugin indention
 
-set nobackup              " Keep no backup file, use version control
-set modelines=2           " Enable modelines in files
-set matchpairs+=<:>       " Add pointy brackets to matchpairs
-set viminfo='20,\"50,h    " Read/write a .viminfo file, don't store more
-                          " Than 50 lines of registers
+Plug 'Shougo/neosnippet.vim'
+Plug 'Shougo/neosnippet-snippets'
 
-set title                 " set Terminals Title.
-set nostartofline         " don't jump cursor around. Stay in one column
-set vb t_vb=              " turn the bell off.
-set autowrite             " Save before :make :suspend, etc
-set encoding=utf-8        " use utf-8 as default encoding.
-let mapleader=","         " my custom mappings are introduced by ','
+call plug#end()
+
+set nobackup                   " Keep no backup file, use version control
+set modelines=2                " Enable modelines in files
+set matchpairs+=<:>            " Add pointy brackets to matchpairs
+set viminfo='20,\"50,h         " Read/write a .viminfo file, don't store more
+                               " Than 50 lines of registers
+set viminfofile=~/.vim/viminfo " Store info under ~/.vim
+set title                      " set Terminals Title.
+set nostartofline              " don't jump cursor around. Stay in one column
+set vb t_vb=                   " turn the bell off.
+set autowrite                  " Save before :make :suspend, etc
+set encoding=utf-8             " use utf-8 as default encoding.
+let mapleader=","              " my custom mappings are introduced by ','
+
+" Persistent Undo
+if !isdirectory(glob('~/.vim/undodir'))
+    call mkdir($HOME."/.vim/undodir","p")
+endif
+set undodir=~/.vim/undodir     " Store undo history in this directory
+set undofile                   " Enable persistent undo
+
+" Snippets & Completion
+let g:deoplete#enable_at_startup = 1
+let g:deoplete#enable_smart_case =  1
+imap <expr><TAB> pumvisible() ? "\<C-n>" : neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
+imap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
+inoremap <expr><CR> pumvisible() ? deoplete#mappings#close_popup() : "\<CR>"
 
 " Whitespace
-                          " Allow backspacing over everything in insert mode
-set backspace=indent,eol,start
-set wrap                  " Enable line Wrapping
-set autoindent            " take indent for new line from previous line
-set linebreak             " Wrap at word
-set tabstop=4             " Tabwidth
-set shiftwidth=4          " Indention
-set softtabstop=4         " Make sure all tabs are 4 spaces
-set expandtab             " Expand tabs to spaces
-set smarttab              " Backspace at beginning of line removes indention
+set backspace=indent,eol,start " Backspacing over everything in insert mode
+set wrap                       " Enable line Wrapping
+set autoindent                 " take indent for new line from previous line
+set linebreak                  " Wrap at word
+set tabstop=4                  " Tabwidth
+set shiftwidth=4               " Indention
+set softtabstop=4              " Make sure all tabs are 4 spaces
+set expandtab                  " Expand tabs to spaces
+set smarttab                   " Backspace at line beginning removes indention
 
 " Searching
-set incsearch             " Incremental search. Search while typing.
-set ignorecase            " Searches are case insensitive
-set smartcase             " Unless they contain at least one capital letter.
-set hlsearch              " highlight search
-
-" neocomplcache configuration
-" Disable AutoComplPop.
-let g:acp_enableAtStartup = 0
-" Use neocomplcache.
-let g:neocomplcache_enable_at_startup = 1
-" limit number of completions to 15
-let g:neocomplcache_max_list = 15
-" use smart case
-let g:neocomplcache_enable_smart_case = 1
-" enable camelcase completion
-let g:neocomplcache_enable_camel_case_completion = 1
-" enable underbar completion
-let g:neocomplcache_enable_underbar_completion = 1
-
-" Define keyword.
-if !exists('g:neocomplcache_keyword_patterns')
-    let g:neocomplcache_keyword_patterns = {}
-endif
-let g:neocomplcache_keyword_patterns['default'] = '\h\w*'
-" Highlight first canidate
-let g:neocomplcache_enable_auto_select = 1
-" Don't have the window popup automatically
-let g:neocomplcache_disable_auto_complete = 15
-inoremap <expr><C-l> neocomplcache#complete_common_string()
-" SuperTab like snippets behavior.
-imap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-    \ "\<Plug>(neosnippet_expand_or_jump)"
-    \: pumvisible() ? "\<C-n>" : "\<TAB>"
-smap <expr><TAB> neosnippet#expandable_or_jumpable() ?
-    \ "\<Plug>(neosnippet_expand_or_jump)"
-    \: "\<TAB>"
-
-autocmd FileType xml setlocal omnifunc=xmlcomplete#CompleteTags
-
-" Enable heavy omni completion.
-if !exists('g:neocomplete#sources#omni#input_patterns')
-    let g:neocomplete#sources#omni#input_patterns = {}
-endif
-
-
-
-" Cache completion on ctrl-space in insert mode
-function! Auto_complete_string()
-    if pumvisible()
-        return "\<C-n>"
-    else
-        return "\<C-x>\<C-u>"
-    end
-endfunction
-
-inoremap <expr> <Nul> Auto_complete_string()
-inoremap <expr> <C-Space> Auto_complete_string()
-
-" CtrlP configuration
-let g:ctrlp_working_path_mode = 'ra'
-let g:ctrlp_custom_ignore = {
-    \ 'dir':  '\.git$\|\.svn$',
-    \ 'file': '\.so$\|\.pyc$\|\.jar$' }
-
-let g:ctrlp_user_command = {
-    \ 'types': {
-    \ 1: ['.git', 'cd %s && git ls-files . --cached --exclude-standard --others'],
-    \ },
-    \ 'fallback': 'find %s -type f'
-\ }
+set incsearch                  " Incremental search. Search while typing
+set ignorecase                 " Searches are case insensitive
+set smartcase                  " Unless they contain at least one capital letter
+set hlsearch                   " highlight search
 
 " Ctags
 set tags=./tags;/,~/.vimtags
@@ -159,7 +93,7 @@ endif
 nnoremap <silent> <leader>tt :TagbarToggle<CR><C-w><C-w>
 
 " Signify configuration
-let g:signify_vcs_list = [ 'git', 'svn' ]
+let g:signify_vcs_list = [ 'git' ]
 let g:signigy_diffoptions = { 'git': '-w', }
 " mapping
 let g:signify_mapping_next_hunk = '<leader>gj'
@@ -169,10 +103,6 @@ let g:signify_mapping_prev_hunk = '<leader>gk'
 let g:signify_update_on_bufenter = 1
 let g:signify_update_on_focusgained = 1
 let g:signify_cursorhold_normal = 2000
-
-" Vim-go configuration
-  let g:go_snippet_engine = "neosnippet"
-  inoremap <Nul> <C-x><C-o>
 
 " User Interface
 syntax enable             " Syntax highlight on.
@@ -191,18 +121,14 @@ else
     set background=dark
 endif
 
-
-
-if filereadable(expand('~/.vim/bundle/vim-colors-solarized/colors/solarized.vim'))
+if filereadable(expand('~/.vim/plugged/vim-colors-solarized/colors/solarized.vim'))
     let g:solarized_termcolors=256
     let g:solarized_termtrans=1
-    let g:solarized_contrast="high"
     let g:solarized_visibility="high"
-    color solarized
+    colorscheme solarized
     " Make signcolumn look better.
     highlight SignColumn ctermbg=235 guibg=#eee8d5
 endif
-
 
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
@@ -220,21 +146,14 @@ nmap <leader>s :split<CR> <C-w><C-w>
 nmap <leader>w <C-w><C-w>_
 
 if has("autocmd")
-    " Don't use autoindent for mutt-files and don't set the title.
-    " I'm not sure if I should keep this. Have not been using
-    " mutt for ages.
-    au BufNewFile,BufRead ~/tmp/mutt*  set tw=72 noai notitle
-
     " Makefiles have real Tabs
     au FileType make set noexpandtab
-
     " In text files, always limit the width of text to 78 characters
-    au BufNewFile,BufRead *.txt,*markdown,*md,*asciidoc set tw=78
-
+    au BufNewFile,BufRead *.txt,*markdown,*md,*asciidoc,*adoc set tw=78
+    " Yaml uses tabsize of two
+    au FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
     au BufNewFile,BufRead *.go set ft=go
-
 endif " has("autocmd")
-
 
 " My mappings
 map <F5> :set number<CR>     " Turn on linenumbers.
@@ -244,7 +163,6 @@ map <F6> :set nonumber<CR>   " Turn off linenumbers.
 " displayed.
 :noremap <silent> <Space> :silent noh<Bar>echo<CR>
 
-autocmd FileType yaml setlocal ts=2 sts=2 sw=2 expandtab
 
 " XML-Related
 let xml_use_xhtml = 1
