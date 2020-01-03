@@ -78,7 +78,7 @@ antibody bundle < ~/.zsh/antigen_plugins.txt
 if [[ -v TMUX ]]; then
     export FZF_TMUX=1
 fi
-export FZF_DEFAULT_COMMAND='fd --type f'
+export FZF_DEFAULT_COMMAND='fd --type f --color=always'
 source /usr/share/fzf/shell/key-bindings.zsh
 # this is a bug in the fedora shipped fzf RPM
 source /usr/share/zsh/site-functions/fzf

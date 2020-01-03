@@ -17,7 +17,7 @@ Plug 'tpope/vim-surround'      " handle surroundings
 Plug 'tpope/vim-fugitive'      " proper git integration
 Plug 'tpope/vim-speeddating'   " use <c-a>/<c-x> on dates
 Plug 'bling/vim-airline'       " Fancy status line
-Plug 'mhinz/vim-signify'       " Visualization of modified files for vcs
+Plug 'airblade/vim-gitgutter'  " show diff in sign colum
 Plug 'fatih/vim-go'            " Go development
 Plug 'junegunn/fzf.vim'        " use fzf for file management
 if executable('ctags')         " use tagbar if ctags is available
@@ -32,8 +32,8 @@ else
   Plug 'roxma/vim-hug-neovim-rpc'
 endif
 
-Plug 'Shougo/neosnippet.vim'
-Plug 'Shougo/neosnippet-snippets'
+Plug 'SirVer/ultisnips'
+Plug 'honza/vim-snippets'
 
 call plug#end()
 
@@ -48,21 +48,15 @@ set nostartofline              " don't jump cursor around. Stay in one column
 set vb t_vb=                   " turn the bell off.
 set autowrite                  " Save before :make :suspend, etc
 set encoding=utf-8             " use utf-8 as default encoding.
+set updatetime=100             " default updatetime 4000ms is not good
+                               " for async update
 let mapleader=","              " my custom mappings are introduced by ','
-
 " Persistent Undo
 if !isdirectory(glob('~/.vim/undodir'))
     call mkdir($HOME."/.vim/undodir","p")
 endif
 set undodir=~/.vim/undodir     " Store undo history in this directory
 set undofile                   " Enable persistent undo
-
-" Snippets & Completion
-let g:deoplete#enable_at_startup = 1
-let g:deoplete#enable_smart_case =  1
-imap <expr><TAB> pumvisible() ? "\<C-n>" : neosnippet#expandable_or_jumpable() ? "\<Plug>(neosnippet_expand_or_jump)" : "\<TAB>"
-imap <expr><S-TAB> pumvisible() ? "\<C-p>" : "\<S-TAB>"
-inoremap <expr><CR> pumvisible() ? deoplete#mappings#close_popup() : "\<CR>"
 
 " Whitespace
 set backspace=indent,eol,start " Backspacing over everything in insert mode
@@ -81,6 +75,21 @@ set ignorecase                 " Searches are case insensitive
 set smartcase                  " Unless they contain at least one capital letter
 set hlsearch                   " highlight search
 
+" Autocomplete and Snippets
+let g:deoplete#enable_at_startup = 1
+" disable autocomplete
+let g:deoplete#disable_auto_complete = 1
+if has("gui_running")
+    inoremap <silent><expr><C-Space> deoplete#manual_complete()
+else
+    inoremap <silent><expr><C-@> deoplete#manual_complete()
+endif
+" UltiSnips config
+inoremap <silent><expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
+let g:UltiSnipsExpandTrigger="<tab>"
+let g:UltiSnipsJumpForwardTrigger="<tab>"
+let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
+
 " Ctags
 set tags=./tags;/,~/.vimtags
 " Make tags placed in .git/tags file available in all levels of a repository
@@ -91,18 +100,6 @@ endif
 
 " Tagbar and switch to that window.
 nnoremap <silent> <leader>tt :TagbarToggle<CR><C-w><C-w>
-
-" Signify configuration
-let g:signify_vcs_list = [ 'git' ]
-let g:signigy_diffoptions = { 'git': '-w', }
-" mapping
-let g:signify_mapping_next_hunk = '<leader>gj'
-let g:signify_mapping_prev_hunk = '<leader>gk'
-
-" The following configuration causes the buffers to be written to disk.
-let g:signify_update_on_bufenter = 1
-let g:signify_update_on_focusgained = 1
-let g:signify_cursorhold_normal = 2000
 
 " User Interface
 syntax enable             " Syntax highlight on.
