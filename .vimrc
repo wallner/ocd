@@ -16,7 +16,8 @@ Plug 'tpope/vim-repeat'        " make repetition work well with plugins
 Plug 'tpope/vim-surround'      " handle surroundings
 Plug 'tpope/vim-fugitive'      " proper git integration
 Plug 'tpope/vim-speeddating'   " use <c-a>/<c-x> on dates
-Plug 'bling/vim-airline'       " Fancy status line
+Plug 'vim-airline/vim-airline' " Fancy status line and themes for it
+Plug 'vim-airline/vim-airline-themes' 
 Plug 'airblade/vim-gitgutter'  " show diff in sign colum
 Plug 'fatih/vim-go'            " Go development
 Plug 'junegunn/fzf.vim'        " use fzf for file management
@@ -111,21 +112,13 @@ set wildmenu              " Show lists instead of just completing
 set laststatus=2          " Always show a status line
 set noshowmode            " Get rid of default mode indicator
 
-if has('gui_running')
-    set background=light
-    set linespace=1
-else
-    set background=dark
-endif
 
-if filereadable(expand('~/.vim/plugged/vim-colors-solarized/colors/solarized.vim'))
-    let g:solarized_termcolors=256
-    let g:solarized_termtrans=1
-    let g:solarized_visibility="high"
-    colorscheme solarized
-    " Make signcolumn look better.
-    highlight SignColumn ctermbg=235 guibg=#eee8d5
-endif
+let g:solarized_termcolors=256
+let g:solarized_termtrans=1
+let g:solarized_visibility="high"
+colorscheme solarized
+" Make signcolumn look better.
+highlight SignColumn ctermbg=235 guibg=#eee8d5
 
 let g:airline_powerline_fonts = 1
 let g:airline#extensions#tabline#enabled = 1
@@ -133,7 +126,14 @@ if !exists('g:airline_symbols')
       let g:airline_symbols = {}
 endif
 let g:airline_symbols.space = "\ua0"
-
+let g:airline_theme='solarized'
+if has('gui_running')
+    set background=light
+    set linespace=1
+else
+    set background=dark
+    let g:airline_solarized_bg='dark'
+endif
 " Window management
 " split window vertically with <leader> v
 nmap <leader>v :vsplit<CR> <C-w><C-w>
@@ -159,19 +159,6 @@ map <F6> :set nonumber<CR>   " Turn off linenumbers.
 " Press Space to turn off highlighting and clear any message already
 " displayed.
 :noremap <silent> <Space> :silent noh<Bar>echo<CR>
-
-
-" XML-Related
-let xml_use_xhtml = 1
-
-" IMPORTANT: grep will sometimes skip displaying the file name if you
-" " search in a singe file. This will confuse latex-suite. Set your grep
-" " program to alway generate a file-name.
-set grepprg=grep\ -nH\ $*
-
-" Prevents Vim 7 from setting filetype to 'plaintex'
-let g:tex_flavor='latex'
-
 
 if filereadable(expand("~/.vimrc-local"))
       source ~/.vimrc-local
