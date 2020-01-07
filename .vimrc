@@ -17,7 +17,7 @@ Plug 'tpope/vim-surround'      " handle surroundings
 Plug 'tpope/vim-fugitive'      " proper git integration
 Plug 'tpope/vim-speeddating'   " use <c-a>/<c-x> on dates
 Plug 'vim-airline/vim-airline' " Fancy status line and themes for it
-Plug 'vim-airline/vim-airline-themes' 
+Plug 'vim-airline/vim-airline-themes'
 Plug 'airblade/vim-gitgutter'  " show diff in sign colum
 Plug 'fatih/vim-go'            " Go development
 Plug 'junegunn/fzf.vim'        " use fzf for file management
@@ -112,7 +112,11 @@ set wildmenu              " Show lists instead of just completing
 set laststatus=2          " Always show a status line
 set noshowmode            " Get rid of default mode indicator
 
+" fzf configuration
 
+
+
+" color and status line
 let g:solarized_termcolors=256
 let g:solarized_termtrans=1
 let g:solarized_visibility="high"
