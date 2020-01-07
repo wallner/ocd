@@ -166,12 +166,6 @@ zstyle ':completion:*' menu select
 # offer indexes before parameters in subscripts
 zstyle ':completion:*:*:-subscript-:*' tag-order indexes parameters
 
-if [ -f $HOME/.zsh/accounts ]; then
-    accounts=( $(<$HOME/.zsh/accounts) )
-    zstyle ':completion:*:complete:ssh:*' users $accounts
-    zstyle ':completion:*:complete:scp:*' users $accounts
-fi
-
 # Don't complete backup files as executables
 zstyle ':completion:*:complete:-command-::commands' ignored-patterns '*\~'
 
@@ -196,6 +190,10 @@ fi
 
 if [ -f /usr/lib64/google-cloud-sdk/completion.zsh.inc ]; then
     source "/usr/lib64/google-cloud-sdk/completion.zsh.inc"
+fi
+
+if [ -f /usr/share/zsh/site-functions/aws_zsh_completer.sh ]; then
+    source "/usr/share/zsh/site-functions/aws_zsh_completer.sh"
 fi
 
 # Magic with Window-Titles
