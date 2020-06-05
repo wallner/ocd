@@ -9,6 +9,10 @@ if [ -d ${HOME}/bin ]; then
     PATH=${HOME}/bin:$PATH
 fi
 
+if [ -d "${HOME}/.local/bin" ]; then
+    PATH=${HOME}/.local/bin:${PATH}
+fi
+
 # initialize antibody
 source <(antibody init)
 
@@ -72,8 +76,6 @@ fi
 
 export _ZSH_DIRCOLORS_SOLARIZED_CONF=${HOME}/.zsh/.zsh_dircolors.config
 
-antibody bundle < ~/.zsh/antigen_plugins.txt
-
 # enable fzf
 if [[ -v TMUX ]]; then
     export FZF_TMUX=1
@@ -120,7 +122,7 @@ alias doch='sudo $(fc -ln -1)'
 alias xps='ps aucx | head -1; ps aucx | grep -i '
 alias tmux='TERM=screen-256color tmux'
 alias https='http --default-scheme=https'
-
+alias xc='xclip -i -selection clipboard'
 # Generate some aliases for programs that are not in the
 # usual path, unless for root that is.
 
@@ -142,8 +144,7 @@ if [ -d "${HOME}/.zsh/completion" ]; then
     fpath=(${HOME}/.zsh/completion/ $fpath)
 fi
 
-autoload -U compinit
-compinit
+autoload -Uz compinit && compinit
 
 # Completion caching
 zstyle ':completion::complete:*' use-cache 1
@@ -151,7 +152,7 @@ zstyle ':completion::complete:*' cache-path $HOME/.zsh/cache/$HOST
 
 # formatting and messages
 zstyle ':completion:*' verbose yes
-zstyle ':completion:*:descriptions' format '%B%d%b'
+zstyle ':completion:*:descriptions' format '[%d]'
 zstyle ':completion:*:messages' format '%d'
 zstyle ':completion:*:warnings' format 'No matches for: %d'
 zstyle ':completion:*:corrections' format '%B%d (errors: %e)%b'
@@ -176,6 +177,8 @@ zstyle ':completion:*:matches' group 'yes'
 zstyle ':completion:*:options' description 'yes'
 zstyle ':completion:*:options' auto-description '%d'
 
+antibody bundle < ~/.zsh/antigen_plugins.txt
+
 if [ $(which kubectl 2> /dev/null) ]; then
     source <(kubectl completion zsh)
 fi
@@ -190,10 +193,6 @@ fi
 
 if [ -f /usr/lib64/google-cloud-sdk/completion.zsh.inc ]; then
     source "/usr/lib64/google-cloud-sdk/completion.zsh.inc"
-fi
-
-if [ -f /usr/share/zsh/site-functions/aws_zsh_completer.sh ]; then
-    source "/usr/share/zsh/site-functions/aws_zsh_completer.sh"
 fi
 
 # Magic with Window-Titles

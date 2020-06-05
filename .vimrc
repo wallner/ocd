@@ -36,6 +36,8 @@ endif
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
+Plug 'ryanoasis/vim-devicons'
+
 call plug#end()
 
 set nobackup                   " Keep no backup file, use version control
