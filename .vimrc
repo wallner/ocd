@@ -13,7 +13,6 @@ Plug 'spf13/vim-autoclose'     " close opened parantheses and '\"
 Plug 'tpope/vim-repeat'        " make repetition work well with plugins
 Plug 'tpope/vim-surround'      " handle surroundings
 Plug 'tpope/vim-speeddating'   " use <c-a>/<c-x> on dates
-""Plug 'vim-airline/vim-airline' " Fancy status line and themes for it
 Plug 'vim-airline/vim-airline-themes'
 Plug 'fatih/vim-go'            " Go development
 Plug 'junegunn/fzf.vim'        " use fzf for file management
@@ -21,12 +20,8 @@ if executable('ctags')         " use tagbar if ctags is available
    Plug 'majutsushi/tagbar'
 endif
 
-
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
-
-""Plug 'ryanoasis/vim-devicons'
-""let g:webdevicons_enable_airline_tabline = 0
 
 call plug#end()
 
