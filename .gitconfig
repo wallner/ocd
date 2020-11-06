@@ -28,15 +28,13 @@
     lg = log --graph --decorate --pretty=oneline --abbrev-commit
     ls = log --decorate --pretty=oneline --abbrev-commit
 	br = branch
-	ci = commit
 	co = checkout
-	st = status -s
+    st = status
     rb = rebase
     fa = fetch --all
-    down = pull --rebase
-    onup = push
+    yolo = commit -a --amend --no-edit
 [push]
-	default = tracking
+	default = current
 [giggle]
 	main-window-maximized = false
 	main-window-geometry = 1028x708+890+150

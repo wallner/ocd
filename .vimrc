@@ -9,34 +9,24 @@ endif
 
 
 call plug#begin('~/.vim/plugged')
-" colorscheme of choice
-Plug 'altercation/vim-colors-solarized'
 Plug 'spf13/vim-autoclose'     " close opened parantheses and '\"
 Plug 'tpope/vim-repeat'        " make repetition work well with plugins
 Plug 'tpope/vim-surround'      " handle surroundings
-Plug 'tpope/vim-fugitive'      " proper git integration
 Plug 'tpope/vim-speeddating'   " use <c-a>/<c-x> on dates
-Plug 'vim-airline/vim-airline' " Fancy status line and themes for it
+""Plug 'vim-airline/vim-airline' " Fancy status line and themes for it
 Plug 'vim-airline/vim-airline-themes'
-Plug 'airblade/vim-gitgutter'  " show diff in sign colum
 Plug 'fatih/vim-go'            " Go development
 Plug 'junegunn/fzf.vim'        " use fzf for file management
 if executable('ctags')         " use tagbar if ctags is available
    Plug 'majutsushi/tagbar'
 endif
 
-if has('nvim')
-  Plug 'Shougo/deoplete.nvim', { 'do': ':UpdateRemotePlugins' }
-else
-  Plug 'Shougo/deoplete.nvim'
-  Plug 'roxma/nvim-yarp'
-  Plug 'roxma/vim-hug-neovim-rpc'
-endif
 
 Plug 'SirVer/ultisnips'
 Plug 'honza/vim-snippets'
 
-Plug 'ryanoasis/vim-devicons'
+""Plug 'ryanoasis/vim-devicons'
+""let g:webdevicons_enable_airline_tabline = 0
 
 call plug#end()
 
@@ -78,21 +68,6 @@ set ignorecase                 " Searches are case insensitive
 set smartcase                  " Unless they contain at least one capital letter
 set hlsearch                   " highlight search
 
-" Autocomplete and Snippets
-let g:deoplete#enable_at_startup = 1
-" disable autocomplete
-let g:deoplete#disable_auto_complete = 1
-if has("gui_running")
-    inoremap <silent><expr><C-Space> deoplete#manual_complete()
-else
-    inoremap <silent><expr><C-@> deoplete#manual_complete()
-endif
-" UltiSnips config
-inoremap <silent><expr><TAB> pumvisible() ? "\<C-n>" : "\<TAB>"
-let g:UltiSnipsExpandTrigger="<tab>"
-let g:UltiSnipsJumpForwardTrigger="<tab>"
-let g:UltiSnipsJumpBackwardTrigger="<s-tab>"
-
 " Ctags
 set tags=./tags;/,~/.vimtags
 " Make tags placed in .git/tags file available in all levels of a repository
@@ -118,11 +93,10 @@ set noshowmode            " Get rid of default mode indicator
 
 
 
+set termguicolors
 " color and status line
-let g:solarized_termcolors=256
-let g:solarized_termtrans=1
 let g:solarized_visibility="high"
-colorscheme solarized
+colorscheme solarized8
 " Make signcolumn look better.
 highlight SignColumn ctermbg=235 guibg=#eee8d5
 

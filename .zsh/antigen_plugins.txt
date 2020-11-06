@@ -1,5 +1,4 @@
 bhilburn/powerlevel9k
-joel-porquet/zsh-dircolors-solarized
 StackExchange/blackbox
 leophys/zsh-plugin-fzf-finder
 ohmyzsh/ohmyzsh path:plugins/aws

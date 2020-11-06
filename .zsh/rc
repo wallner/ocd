@@ -120,7 +120,6 @@ alias cd..="cd .."
 alias \#='sudo'
 alias doch='sudo $(fc -ln -1)'
 alias xps='ps aucx | head -1; ps aucx | grep -i '
-alias tmux='TERM=screen-256color tmux'
 alias https='http --default-scheme=https'
 alias xc='xclip -i -selection clipboard'
 # Generate some aliases for programs that are not in the
@@ -187,12 +186,23 @@ if [ $(which minikube 2> /dev/null) ]; then
     source <(minikube completion zsh)
 fi
 
-if [ $(which helm 2> /dev/null ) ]; then
+if [ $(which helm 2> /dev/null) ]; then
     source <(helm completion zsh)
 fi
 
+if [ $(which k3d 2> /dev/null) ]; then
+    source <(k3d completion zsh)
+fi
+
+if [ $(which stern 2> /dev/null) ]; then
+    source <(stern --completion zsh)
+fi
 if [ -f /usr/lib64/google-cloud-sdk/completion.zsh.inc ]; then
     source "/usr/lib64/google-cloud-sdk/completion.zsh.inc"
+fi
+
+if [ -d "${HOME}/sw/flutter/bin" ]; then
+    PATH=$PATH:${HOME}/sw/flutter/bin
 fi
 
 # Magic with Window-Titles
