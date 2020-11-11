@@ -55,27 +55,6 @@ else
     alias vim='vi'
 fi
 
-
-# The prompt. Make sure colors are loaded
-
-autoload -U colors && colors
-if [ -x `which powerline-daemon` ]; then
-    powerline-daemon -q
-    POWERLEVEL9K_LEFT_PROMPT_ELEMENTS=(status time vcs context)
-    POWERLEVEL9K_RIGHT_PROMPT_ELEMENTS=(dir)
-    POWERLEVEL9K_MODE='awesome-fontconfig'
-    POWERLEVEL9K_CONTEXT_DEFAULT_BACKGROUND='none'
-    POWERLEVEL9K_STATUS_VERBOSE=false
-    POWERLEVEL9K_SHORTEN_STRATEGY="truncate_middle"
-    POWERLEVEL9K_SHORTEN_DIR_LENGTH=2
-    DEFAULT_USER='wallner'
-else
-    RPROMPT="%~"               # display cwd at right side
-    PROMPT="%{$fg[yellow]%}%T%{$reset_color%} %n@%m%# " # "Time name@hostname% "
-fi
-
-export _ZSH_DIRCOLORS_SOLARIZED_CONF=${HOME}/.zsh/.zsh_dircolors.config
-
 # enable fzf
 if [[ -v TMUX ]]; then
     export FZF_TMUX=1

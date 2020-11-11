@@ -84,9 +84,6 @@ set wildmenu              " Show lists instead of just completing
 set laststatus=2          " Always show a status line
 set noshowmode            " Get rid of default mode indicator
 
-" fzf configuration
-
-
 
 set termguicolors
 " color and status line
